@@ -1,0 +1,16 @@
+{
+  "extends": "eslint-config-egg",
+  "rules": {
+    "array-bracket-spacing": ["error", "never"],
+    "prettier/prettier": [
+      {
+        "singleQuote": true,
+        "bracketSpacing": true,
+        "semi": true,
+        "arrowParens": "avoid",
+        "printWidth": 140,
+        "trailingComma": "es5"
+      }
+    ]
+  }
+}

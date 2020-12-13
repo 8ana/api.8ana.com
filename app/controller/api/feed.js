@@ -1,0 +1,48 @@
+'use strict';
+
+const { Controller } = require('egg');
+
+class Feed extends Controller {
+  async get() {
+    // 获取 url 中的 id 参数
+    const { ctx, service } = this;
+    const { id } = this.ctx.params;
+    const data = await service.feed.get(id);
+    let format = {};
+    if (data) {
+      format = ctx.helper.copy(data);
+      format.hits = await ctx.hits({ arr: data, name: 'feed', model: 'Feed' });
+      ctx.helper.deleleParams(format, 'feed');
+      ctx.helper.success(ctx, { data: format });
+    } else {
+      ctx.helper.fail(ctx, { data, message: '没有找到内容' });
+    }
+  }
+
+  async list() {
+    const { ctx, service } = this;
+    const result = await service.feed.list(ctx.request.query);
+
+    ctx.helper.success(ctx, { data: result });
+  }
+
+  async saveNew() {
+    const { ctx, service } = this;
+    const result = await service.feed.saveNew(ctx.request.body);
+    ctx.helper.success(ctx, { data: result });
+  }
+
+  async saveModify() {
+    const { ctx, service } = this;
+    const result = await service.feed.saveModify(ctx.request.body);
+    ctx.helper.success(ctx, { data: result });
+  }
+
+  async delete() {
+    const { ctx, service } = this;
+    const result = await service.feed.delete(ctx.request.body);
+    ctx.helper.success(ctx, { data: result });
+  }
+}
+
+module.exports = Feed;
