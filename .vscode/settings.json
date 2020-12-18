@@ -2,9 +2,10 @@
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
   "prettier.bracketSpacing": true, // 在对象，数组括号与文字之间加空格 "{ foo: bar }"
-  "prettier.printWidth": 140,
+  "prettier.printWidth": 180,
   "prettier.singleQuote": true,
   "prettier.semi": true,
   "prettier.arrowParens": "avoid",
-  "prettier.trailingComma": "es5"
+  "prettier.trailingComma": "es5",
+  "window.zoomLevel": 0.75,
 }

@@ -7,17 +7,7 @@ class Feed extends Service {
   async get(id) {
     const feed = await this.app.model.Feed.get({
       id,
-      attributes: [
-        'feed_id',
-        'feed_cid',
-        'feed_sid',
-        'feed_type',
-        'feed_hits',
-        'feed_hits_month',
-        'feed_hits_day',
-        'feed_hits_week',
-        'feed_hits_lasttime',
-      ],
+      attributes: ['feed_id', 'feed_cid', 'feed_sid', 'feed_type', 'feed_hits', 'feed_hits_month', 'feed_hits_day', 'feed_hits_week', 'feed_hits_lasttime'],
     });
     return feed;
   }
@@ -30,9 +20,9 @@ class Feed extends Service {
     return feed;
   }
 
-  async saveNew(params = {}) {
+  async add(params = {}) {
     const { sid, cid, uid, type, ip } = params;
-    return this.app.model.Feed.saveNew({
+    return await this.app.model.Feed.add({
       ...params,
       feed_sid: sid,
       feed_cid: cid,
@@ -43,12 +33,12 @@ class Feed extends Service {
     });
   }
 
-  async saveModify(params = {}) {
-    return this.app.model.Feed.saveModify(params);
+  async edit(params = {}) {
+    return await this.app.model.Feed.edit(params);
   }
 
   async delete(params = {}) {
-    return this.app.model.Feed.delete(params);
+    return await this.app.model.Feed.delete(params);
   }
 }
 

@@ -26,15 +26,15 @@ class Feed extends Controller {
     ctx.helper.success(ctx, { data: result });
   }
 
-  async saveNew() {
+  async add() {
     const { ctx, service } = this;
-    const result = await service.feed.saveNew(ctx.request.body);
+    const result = await service.feed.add(ctx.request.body);
     ctx.helper.success(ctx, { data: result });
   }
 
-  async saveModify() {
+  async edit() {
     const { ctx, service } = this;
-    const result = await service.feed.saveModify(ctx.request.body);
+    const result = await service.feed.edit(ctx.request.body);
     ctx.helper.success(ctx, { data: result });
   }
 

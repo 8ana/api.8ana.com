@@ -6,12 +6,6 @@ const koajwt = require('koa-jwt2');
  */
 module.exports = app => {
   const { router, controller, io, jwt } = app;
-
-  router.get('/', controller.home.index);
-  router.post('/api/user/login', controller.api.user.login);
-  router.get('/api/user/reg', controller.api.user.reg);
-  router.get('/api/user/list', controller.api.user.list);
-  router.get('/user-info', jwt, controller.api.user.userInfo);
   const isRevokedAsync = (req, payload) => {
     return new Promise(resolve => {
       try {
@@ -28,7 +22,7 @@ module.exports = app => {
     });
   };
   router.post(
-    '/logout',
+    '/api/user/logout',
     koajwt({
       secret: app.config.jwt.secret,
       credentialsRequired: false,
@@ -37,18 +31,24 @@ module.exports = app => {
     controller.api.user.logout
   );
 
-  router.get('/api/user/:id', jwt, controller.api.user.get);
+  router.get('/', controller.home.index);
+  router.post('/api/user/login', controller.api.user.login);
+  router.post('/api/user/add', controller.api.user.add);
+  router.get('/api/user/list', controller.api.user.list);
+  router.get('/api/user/info', jwt, controller.api.user.userInfo);
+  router.get('/api/user/:id', controller.api.user.get);
   router.get('/api/favorite/:id', controller.api.favorite.get);
   router.get('/api/subject/list', controller.api.subject.list);
-  router.post('/api/subject/saveNew', jwt, controller.api.subject.saveNew);
-  router.put('/api/subject/saveModify', jwt, controller.api.subject.saveModify);
+  router.post('/api/subject/add', jwt, controller.api.subject.add);
+  router.put('/api/subject/edit', jwt, controller.api.subject.edit);
   router.delete('/api/subject/delete', jwt, controller.api.subject.delete);
   router.get('/api/subject/:id', controller.api.subject.get);
   router.get('/api/news/list', controller.api.news.list);
   router.get('/api/news/:id', controller.api.news.get);
   router.get('/api/feed/list', controller.api.feed.list);
-  router.post('/api/feed/saveNew', jwt, controller.api.feed.saveNew);
-  router.post('/api/feed/saveModify', jwt, controller.api.feed.saveModify);
+  router.post('/api/feed/add', jwt, controller.api.feed.add);
+  router.post('/api/feed/edit', jwt, controller.api.feed.edit);
+  router.delete('/api/feed/delete', jwt, controller.api.feed.delete);
   router.get('/api/feed/:id', controller.api.feed.get);
   router.get('/api/remind/list', controller.api.remind.list);
   router.get('/api/remind/:id', controller.api.remind.get);

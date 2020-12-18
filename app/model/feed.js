@@ -57,13 +57,13 @@ module.exports = app => {
   };
 
   // 添加
-  Feed.saveNew = async params => {
+  Feed.add = async params => {
     const result = await Feed.create(params);
     console.log(result);
     return result;
   };
   // 更新
-  Feed.saveModify = async params => {
+  Feed.edit = async params => {
     const { feed_id } = params;
     const result = await Feed.update(params, { where: { feed_id } });
     console.log(result);

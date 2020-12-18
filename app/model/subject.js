@@ -14,12 +14,12 @@ module.exports = app => {
   const Play = model.define(`${app.config.prefix}play`, playSchema);
 
   // 添加
-  Subject.saveNew = async params => {
+  Subject.add = async params => {
     const result = await Subject.create(params);
     return result;
   };
   // 更新
-  Subject.saveModify = async params => {
+  Subject.edit = async params => {
     const { vod_id } = params;
     const result = await Subject.update(params, { where: { vod_id } });
     return result;
@@ -27,7 +27,23 @@ module.exports = app => {
 
   // 删除
   Subject.delete = async params => {
-    const result = await Subject.destroy({ where: params });
+    const { vod_id } = params;
+    const result = await Subject.destroy({ where: { vod_id } });
+    if (result) {
+      model.Mcid.destroy({ where: { mcid_id: vod_id, mcid_sid: 1 } });
+      model.Tag.destroy({ where: { tag_id: vod_id, tag_sid: 1 } });
+      model.Topic.destroy({ where: { topic_did: vod_id, topic_sid: 1 } });
+      model.Actors.destroy({ where: { actors_id: vod_id } });
+      model.Story.destroy({ where: { story_vid: vod_id } });
+      model.Part.destroy({ where: { part_vid: vod_id } });
+      model.Actor.destroy({ where: { actor_vid: vod_id } });
+      model.Role.destroy({ where: { role_vid: vod_id } });
+      // db('Gold')->where('gold_vid',$vod->vod_id)->delete();
+      // db('playlog')->where('log_vid',$vod->vod_id)->delete();
+      // db('cm')->where(['cm_vid'=>$vod->vod_id,'cm_sid'=>1])->delete();
+      // db('favorite')->where('favorite_vid',$user->user_id)->delete();
+      // db('remind')->where('remind_vid',$user->user_id)->delete();
+    }
     return result;
   };
 
@@ -65,29 +81,7 @@ module.exports = app => {
    * @return {object|null} - 查找结果
    */
   Subject.query = async ({ attributes, pageSize, pageNo, filter = '{}', order = ['vod_addtime', 'DESC'] }) => {
-    const {
-      wd,
-      ids,
-      not,
-      letter,
-      cid,
-      name,
-      area,
-      language,
-      year,
-      filmtime,
-      stars,
-      hits,
-      gold,
-      up,
-      down,
-      addtime,
-      day,
-      prty,
-      weekday,
-      tag,
-      mcid,
-    } = JSON.parse(filter);
+    const { wd, ids, not, letter, cid, name, area, language, year, filmtime, stars, hits, gold, up, down, addtime, day, prty, weekday, tag, mcid } = JSON.parse(filter);
     console.log(JSON.parse(filter));
     const condition = {
       attributes,

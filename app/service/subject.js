@@ -61,21 +61,21 @@ class Subject extends Service {
     return subject;
   }
 
-  async saveNew(params = {}) {
+  async add(params = {}) {
     const param = { ...params, vod_status: 0 };
-    return this.app.model.Subject.saveNew(param);
+    return await this.app.model.Subject.add(param);
   }
 
-  async saveModify(params = {}) {
-    return this.app.model.Subject.saveModify(params);
+  async edit(params = {}) {
+    return await this.app.model.Subject.edit(params);
   }
 
   async delete(params = {}) {
-    return this.app.model.Subject.delete(params);
+    return await this.app.model.Subject.delete(params);
   }
 
   async mcat(params = {}) {
-    return this.app.model.Subject.mcat(params);
+    return await this.app.model.Subject.mcat(params);
   }
 
   async typeList(params = {}) {
@@ -85,7 +85,7 @@ class Subject extends Service {
   }
 
   async play(params = {}) {
-    return this.app.model.Subject.play(params);
+    return await this.app.model.Subject.play(params);
   }
 }
 

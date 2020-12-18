@@ -1,12 +1,6 @@
 'use strict';
 
-const Service = require('egg').Service;
-
-function toInt(str) {
-  if (typeof str === 'number') return str;
-  if (!str) return str;
-  return parseInt(str, 10) || 0;
-}
+const { Service } = require('egg');
 
 class User extends Service {
   async get(id) {
@@ -29,27 +23,24 @@ class User extends Service {
     return user;
   }
 
-  async list(pageSize, pageNo, orderBy = 'user_reg_time', order = 'DESC') {
-    const offset = pageSize * (pageNo - 1);
-
-    const { count, rows } = await this.ctx.model.User.findAndCountAll({
-      attributes: ['user_id'],
-      where: {
-        user_status: 1,
-      },
-      order: [[orderBy, order]],
-      limit: toInt(pageSize),
-      offset,
+  async list(params = {}) {
+    const user = await this.app.model.User.query({
+      ...params,
+      attributes: ['user_id', 'user_name'],
     });
+    return user;
+  }
 
-    return {
-      list: rows,
-      pages: {
-        pageNo,
-        pageSize,
-        total: count,
-      },
-    };
+  async add(params = {}) {
+    return await this.app.model.User.add(params);
+  }
+
+  async edit(params = {}) {
+    return await this.app.model.User.edit(params);
+  }
+
+  async delete(params = {}) {
+    return await this.app.model.User.delete(params);
   }
 }
 

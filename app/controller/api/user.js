@@ -1,7 +1,7 @@
 'use strict';
 
 const { Controller } = require('egg');
-
+const { ip2long } = require('../../util');
 class User extends Controller {
   constructor(ctx) {
     super(ctx);
@@ -83,16 +83,31 @@ class User extends Controller {
 
   async list() {
     const { ctx, service } = this;
-    const { pageSize = 10, pageNo = 1 } = this.ctx.request.query;
-    const result = await service.user.list(pageSize, pageNo);
+    const result = await service.user.list(ctx.request.query);
 
-    // 设置响应内容和响应状态码
     ctx.helper.success(ctx, { data: result });
   }
 
-  async reg() {
-    const { ctx } = this;
-    ctx.helper.success(ctx, { data: ctx.helper.randomString(6) });
+  async add() {
+    const { ctx, service } = this;
+    const params = ctx.request.body;
+    const ip = this.ctx.request.ip;
+    const rand = ctx.helper.randomString(6);
+    params.user_password = ctx.helper.md5(ctx.helper.md5(params.user_password) + rand);
+    const result = await service.user.add({ ...params, user_salt: rand, user_reg_ip: ip2long(ip), user_last_login_ip: ip2long(ip) });
+    ctx.helper.success(ctx, { data: result });
+  }
+
+  async edit() {
+    const { ctx, service } = this;
+    const result = await service.user.edit(ctx.request.body);
+    ctx.helper.success(ctx, { data: result });
+  }
+
+  async delete() {
+    const { ctx, service } = this;
+    const result = await service.user.delete(ctx.request.body);
+    ctx.helper.success(ctx, { data: result });
   }
 }
 

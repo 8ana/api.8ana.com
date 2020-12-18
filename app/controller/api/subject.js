@@ -90,22 +90,22 @@ class Subject extends Controller {
     ctx.helper.success(ctx, { data: result });
   }
 
-  async saveNew() {
+  async add() {
     const { ctx, service } = this;
-    const result = await service.subject.saveNew(ctx.request.body);
+    const result = await service.subject.add(ctx.request.body);
     if (result) {
       const { vod_id, vod_cid, vod_uid } = result;
       const ip = this.ctx.request.ip;
-      await service.feed.saveNew({ ip, sid: 1, cid: vod_cid, uid: vod_uid, type: 4, feed_vid: vod_id });
+      await service.feed.add({ ip, sid: 1, cid: vod_cid, uid: vod_uid, type: 4, feed_vid: vod_id });
       ctx.helper.success(ctx, { data: result, message: '添加成功' });
     } else {
       ctx.helper.fail(ctx, { data: 0, message: '添加失败' });
     }
   }
 
-  async saveModify() {
+  async edit() {
     const { ctx, service } = this;
-    const result = await service.subject.saveModify(ctx.request.body);
+    const result = await service.subject.edit(ctx.request.body);
     if (result[0]) {
       ctx.helper.success(ctx, { data: 1, message: '更新成功' });
     } else {

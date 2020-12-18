@@ -7,7 +7,7 @@ module.exports = app => {
   return {
     feed_id: {
       autoIncrement: true,
-      type: MEDIUMINT,
+      type: MEDIUMINT.UNSIGNED,
       allowNull: false,
       primaryKey: true,
     },
