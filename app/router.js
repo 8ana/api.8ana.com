@@ -34,6 +34,8 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.post('/api/user/login', controller.api.user.login);
   router.post('/api/user/add', controller.api.user.add);
+  router.put('/api/user/edit', jwt, controller.api.user.edit);
+  router.delete('/api/user/delete', jwt, controller.api.user.delete);
   router.get('/api/user/list', controller.api.user.list);
   router.get('/api/user/info', jwt, controller.api.user.userInfo);
   router.get('/api/user/:id', controller.api.user.get);

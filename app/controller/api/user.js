@@ -22,11 +22,11 @@ class User extends Controller {
     const user = await service.user.findByName(user_name);
 
     if (!user) {
-      ctx.body = {
-        message: 'Username or password wrong',
-      };
+      helper.fail(ctx, { message: '用户名错误' });
+    } else if (user.user_status === 0) {
+      helper.fail(ctx, { message: '用户未审核' });
     } else {
-      const pwd = ctx.helper.md5(ctx.helper.md5(user_password) + user.user_salt);
+      const pwd = helper.md5(helper.md5(user_password) + user.user_salt);
       if (pwd === user.user_password) {
         // 生成Token令牌
         const token = app.jwt.sign(
@@ -40,22 +40,15 @@ class User extends Controller {
         );
         try {
           await app.redis.set(`token_${user.user_id}`, token);
-          ctx.body = {
-            token,
-          };
+          helper.success(ctx, { data: token });
         } catch (e) {
           console.error(e);
-          ctx.body = {
-            message: 'Server busy, please try again',
-          };
+          helper.fail(ctx, { message: '服务器忙，请稍后再试' });
         }
       } else {
-        ctx.body = {
-          message: 'Username or password wrong',
-        };
+        helper.fail(ctx, { message: '密码不正确' });
       }
     }
-    helper.success(ctx, { data: ctx.body });
   }
 
   async userInfo() {
@@ -71,14 +64,10 @@ class User extends Controller {
 
   async get() {
     // 获取 url 中的 id 参数
-    const { id } = this.ctx.params;
-
+    const { ctx } = this;
+    const { id } = ctx.params;
     const user = await this.service.user.get(id);
-
-    this.ctx.body = {
-      success: !!user,
-      user,
-    };
+    ctx.helper.success(ctx, { data: user });
   }
 
   async list() {
@@ -100,7 +89,13 @@ class User extends Controller {
 
   async edit() {
     const { ctx, service } = this;
-    const result = await service.user.edit(ctx.request.body);
+    const params = ctx.request.body;
+    if (params.user_password) {
+      const rand = ctx.helper.randomString(6);
+      params.user_salt = rand;
+      params.user_password = ctx.helper.md5(ctx.helper.md5(params.user_password) + rand);
+    }
+    const result = await service.user.edit(params);
     ctx.helper.success(ctx, { data: result });
   }
 
