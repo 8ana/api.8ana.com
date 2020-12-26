@@ -8,4 +8,14 @@
   "prettier.arrowParens": "avoid",
   "prettier.trailingComma": "es5",
   "window.zoomLevel": 0.75,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.codeActionsOnSave": {
+    // For ESLint
+    "source.fixAll.eslint": true,
+  }
 }

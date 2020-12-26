@@ -1,16 +1,16 @@
 {
-  "extends": "eslint-config-egg",
+  "extends": ["eslint-config-egg/typescript", "prettier", "prettier/@typescript-eslint", "plugin:prettier/recommended"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
-    "array-bracket-spacing": ["error", "never"],
-    "prettier/prettier": [
-      {
-        "singleQuote": true,
-        "bracketSpacing": true,
-        "semi": true,
-        "arrowParens": "avoid",
-        "printWidth": 140,
-        "trailingComma": "es5"
-      }
-    ]
+    "prettier/prettier": ["error", {
+      "singleQuote": true,
+      "bracketSpacing": true,
+      "semi": true,
+      "arrowParens": "avoid",
+      "printWidth": 180,
+      "trailingComma": "es5"
+    }]
   }
 }
