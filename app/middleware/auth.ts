@@ -1,7 +1,7 @@
-import * as jwt from 'jsonwebtoken';
+import { Context } from 'egg';
 
 export default level => {
-  return async (ctx, next) => {
+  return async (ctx: Context, next: () => Promise<any>) => {
     const token = ctx.header.authorization;
 
     const level0 = {
@@ -11,8 +11,10 @@ export default level => {
 
     if (token) {
       try {
-        const { user_id }: any = await jwt.verify(token, ctx.app.config.tokenSecret);
+        const { user_id }: any = await ctx.app.jwt.verify(token.replace('Bearer ', ''), ctx.app.config.jwt.secret);
         const userInfo = await ctx.service.user.get(user_id);
+
+        console.log(user_id, 'user_id');
 
         if (userInfo) {
           ctx.state.user = userInfo;
@@ -20,7 +22,7 @@ export default level => {
           ctx.state.user = level0;
         }
       } catch (error) {
-        return ctx.helper.status(401);
+        return ctx.helper.fail(ctx, { status: 401 });
       }
     } else {
       ctx.state.user = level0;

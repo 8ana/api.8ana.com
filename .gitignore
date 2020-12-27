@@ -1,5 +1,7 @@
 logs/
 npm-debug.log
+yarn-error.log
+package-lock.json
 node_modules/
 coverage/
 .idea/

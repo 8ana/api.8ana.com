@@ -1,6 +1,7 @@
 import crypto = require('crypto');
+import { Context } from 'egg';
 
-export interface Ifail {
+export interface IFail {
   message?: string;
   status?: number;
   data?: object | number | string;
@@ -8,8 +9,7 @@ export interface Ifail {
 
 export default {
   // 处理成功请求后的响应
-  success(ctx, { data = {}, status = 200, message = '' }: Ifail) {
-    if (!data) status = 404;
+  success(ctx: Context, { data = {}, status = 200, message = '' }: IFail) {
     ctx.body = {
       status: 200,
       data: data || {},
@@ -18,17 +18,14 @@ export default {
     ctx.status = 200;
   },
   // 处理失败请求后的响应
-  fail(ctx, { message = '', status = 500, data = {} }: Ifail) {
-    if (message) {
-      ctx.body = {
-        status: 500,
-        message: message || ctx.errCodes[status],
-        data: data || {},
-      };
-      ctx.status = 200;
-    } else {
-      throw new Error(message);
-    }
+  fail(ctx: Context, { message = '', status = 500, data = {} }: IFail) {
+    console.log(ctx.errCodes[status], status, 'errCodes');
+    ctx.body = {
+      status: status || 500,
+      message: message || ctx.errCodes[status],
+      data: data || {},
+    };
+    ctx.status = 200;
   },
 
   md5(data) {

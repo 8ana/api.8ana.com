@@ -32,14 +32,16 @@ export default class UserController extends Controller {
     } else if (user.user_status === 0) {
       helper.fail(ctx, { message: '用户未审核' });
     } else {
-      const pwd = helper.md5(helper.md5(user_password) + user.user_salt);
+      const { user_admin, user_id, user_name, user_avatar, user_salt } = user;
+      const pwd = helper.md5(helper.md5(user_password) + user_salt);
       if (pwd === user.user_password) {
         // 生成Token令牌
         const token = app.jwt.sign(
           {
-            user_id: user.user_id,
-            user_name: user.user_name,
-            user_avatar: user.user_avatar,
+            user_id,
+            user_name,
+            user_avatar,
+            user_admin,
           },
           config.jwt.secret,
           { expiresIn: '7d' }
@@ -49,7 +51,7 @@ export default class UserController extends Controller {
           helper.success(ctx, { data: token });
         } catch (e) {
           console.error(e);
-          helper.fail(ctx, { message: '服务器忙，请稍后再试' });
+          helper.fail(ctx, {});
         }
       } else {
         helper.fail(ctx, { message: '密码不正确' });

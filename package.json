@@ -20,7 +20,6 @@
     "egg-socket.io": "^4.1.6",
     "egg-validate": "^2.0.2",
     "egg-view-nunjucks": "^2.2.0",
-    "jsonwebtoken": "^8.5.1",
     "koa-jwt2": "^1.0.3",
     "lodash": "^4.17.20",
     "mysql2": "^2.2.5",
