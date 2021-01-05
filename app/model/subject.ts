@@ -10,9 +10,9 @@ export default app => {
   const subjectSchema = subject(app);
   const mcatSchema = mcat(app);
   const playSchema = play(app);
-  const Subject = model.define(`${app.config.prefix}vod`, subjectSchema);
-  const Mcat = model.define(`${app.config.prefix}mcat`, mcatSchema);
-  const Play = model.define(`${app.config.prefix}play`, playSchema);
+  const Subject = model.define('subject', subjectSchema);
+  const Mcat = model.define('mcat', mcatSchema, { timestamps: false });
+  const Play = model.define('play', playSchema, { timestamps: false });
 
   // 添加
   Subject.add = async params => {
@@ -21,40 +21,40 @@ export default app => {
   };
   // 更新
   Subject.edit = async params => {
-    const { vod_id } = params;
-    const result = await Subject.update(params, { where: { vod_id } });
+    const { id } = params;
+    const result = await Subject.update(params, { where: { id } });
     return result;
   };
 
   // 删除
   Subject.delete = async params => {
-    const { vod_id } = params;
-    const result = await Subject.destroy({ where: { vod_id } });
+    const { id } = params;
+    const result = await Subject.destroy({ where: { id } });
     if (result) {
-      model.Mcid.destroy({ where: { mcid_id: vod_id, mcid_sid: 1 } });
-      model.Tag.destroy({ where: { tag_id: vod_id, tag_sid: 1 } });
-      model.Topic.destroy({ where: { topic_did: vod_id, topic_sid: 1 } });
-      model.Actors.destroy({ where: { actors_id: vod_id } });
-      model.Story.destroy({ where: { story_vid: vod_id } });
-      model.Part.destroy({ where: { part_vid: vod_id } });
-      model.Actor.destroy({ where: { actor_vid: vod_id } });
-      model.Role.destroy({ where: { role_vid: vod_id } });
-      // db('Gold')->where('gold_vid',$vod->vod_id)->delete();
-      // db('playlog')->where('log_vid',$vod->vod_id)->delete();
-      // db('cm')->where(['cm_vid'=>$vod->vod_id,'cm_sid'=>1])->delete();
-      // db('favorite')->where('favorite_vid',$user->user_id)->delete();
-      // db('remind')->where('remind_vid',$user->user_id)->delete();
+      model.Mcid.destroy({ where: { id, sid: 1 } });
+      model.Tag.destroy({ where: { id, sid: 1 } });
+      model.Association.destroy({ where: { aid: id, sid: 1 } });
+      // model.Actors.destroy({ where: { actors_id: id } });
+      // model.Story.destroy({ where: { story_vid: id } });
+      // model.Part.destroy({ where: { part_vid: id } });
+      // model.Actor.destroy({ where: { actor_vid: id } });
+      // model.Role.destroy({ where: { role_vid: id } });
+      // db('Gold')->where('gold_vid',$vod->id)->delete();
+      // db('playlog')->where('log_vid',$vod->id)->delete();
+      // db('cm')->where(['cvid'=>$vod->id,'csid'=>1])->delete();
+      // db('favorite')->where('favorite_vid',$user->id)->delete();
+      // db('remind')->where('remind_vid',$user->id)->delete();
     }
     return result;
   };
 
   Subject.play = async params => {
-    const { orderBy = 'play_oid', order = 'DESC' } = params;
+    const { orderBy = 'rank', order = 'DESC' } = params;
     const rows = await Play.findAll({
-      attributes: ['play_title', 'play_name', 'play_display', 'play_oid'],
+      attributes: ['title', 'name', 'display', 'rank'],
       where: {
-        play_status: 1,
-        play_display: 1,
+        status: 1,
+        display: 1,
       },
       order: [[orderBy, order]],
     });
@@ -63,12 +63,12 @@ export default app => {
   };
 
   Subject.mcat = async params => {
-    const { orderBy = 'm_order', order = 'DESC', sid = 3, cid = '' } = params;
+    const { orderBy = 'rank', order = 'DESC', sid = 3, cid = '' } = params;
     const rows = await Mcat.findAll({
-      attributes: ['m_cid', 'm_name'],
+      attributes: ['cid', 'name'],
       where: {
-        m_list_id: sid,
-        m_cid: cid,
+        list_id: sid,
+        cid,
       },
       order: [[orderBy, order]],
     });
@@ -81,88 +81,88 @@ export default app => {
    * @param {object} { attributes, pageSize, pageNo, filter } - 条件
    * @return {object|null} - 查找结果
    */
-  Subject.query = async ({ attributes, pageSize, pageNo, filter = '{}', order = ['vod_addtime', 'DESC'] }) => {
-    const { wd, ids, not, letter, cid, name, area, language, year, filmtime, stars, hits, gold, up, down, addtime, day, prty, weekday, tag, mcid } = JSON.parse(filter);
+  Subject.query = async ({ attributes, pageSize, pageNo, filter = '{}', order = ['created_at', 'DESC'] }) => {
+    const { wd, ids, not, letter, cid, name, area, language, year, filmtime, stars, hits, gold, up, down, created_at, day, prty, weekday, tag, mcid } = JSON.parse(filter);
     console.log(JSON.parse(filter));
     const condition: any = {
       attributes,
-      include: [{ model: model.User, attributes: ['user_id', 'user_name', 'user_nickname', 'user_avatar'], as: 'user' }],
+      include: [{ model: model.User, attributes: ['id', 'username', 'nickname', 'avatar'], as: 'user' }],
       order: [order],
       offset: pageSize * (pageNo - 1),
       limit: app.utils.Tool.toInt(pageSize),
-      where: { vod_status: 1 },
+      where: { status: 1 },
     };
 
     if (wd) {
       condition.where[Op.or] = [
-        { vod_name: { [Op.like]: `%%${wd}%%` } },
-        { vod_letters: { [Op.like]: `%%${wd}%%` } },
-        { vod_aliases: { [Op.like]: `%%${wd}%%` } },
-        { vod_actor: { [Op.like]: `%%${wd}%%` } },
-        { vod_keywords: { [Op.like]: `%%${wd}%%` } },
-        { vod_director: { [Op.like]: `%%${wd}%%` } },
-        { vod_tag: { [Op.like]: `%%${wd}%%` } },
-        { vod_title: { [Op.like]: `%%${wd}%%` } },
-        { vod_play: { [Op.like]: `%%${wd}%%` } },
+        { name: { [Op.like]: `%%${wd}%%` } },
+        { letters: { [Op.like]: `%%${wd}%%` } },
+        { aliases: { [Op.like]: `%%${wd}%%` } },
+        { actor: { [Op.like]: `%%${wd}%%` } },
+        { keywords: { [Op.like]: `%%${wd}%%` } },
+        { director: { [Op.like]: `%%${wd}%%` } },
+        { tag: { [Op.like]: `%%${wd}%%` } },
+        { title: { [Op.like]: `%%${wd}%%` } },
+        { play: { [Op.like]: `%%${wd}%%` } },
       ];
     }
 
     if (ids) {
-      condition.where.vod_id = ids.split(',');
+      condition.where.id = ids.split(',');
     }
 
     if (not) {
-      condition.where.vod_id = {
+      condition.where.id = {
         [Op.not]: not,
       };
     }
 
     if (letter) {
-      condition.where.vod_letter = letter.split(',');
+      condition.where.letter = letter.split(',');
     }
 
     if (cid) {
-      condition.where.vod_cid = cid.split(',');
+      condition.where.cid = cid.split(',');
     }
 
     if (name) {
-      condition.where.vod_name = name.split(',');
+      condition.where.name = name.split(',');
     }
 
     if (area) {
-      condition.where.vod_area = area.split(',');
+      condition.where.area = area.split(',');
     }
 
     if (language) {
-      condition.where.vod_language = language.split(',');
+      condition.where.language = language.split(',');
     }
 
     if (year) {
-      condition.where.vod_year = year.split(',');
+      condition.where.year = year.split(',');
     }
 
     if (prty) {
-      condition.where.vod_prty = prty;
+      condition.where.prty = prty;
     }
 
     if (weekday) {
-      condition.where.vod_weekday = weekday;
+      condition.where.weekday = weekday;
     }
 
     if (filmtime) {
       const now = new Date().getTime();
       if (filmtime === 1) {
-        condition.where.vod_filmtime = {
+        condition.where.filmtime = {
           [Op.lte]: now,
         };
       } else {
         const arr = filmtime.trim().split('|');
         if (arr[1]) {
-          condition.where.vod_filmtime = {
+          condition.where.filmtime = {
             [Op.between]: [new Date(arr[0]).getTime() / 1000, new Date(arr[1]).getTime() / 1000],
           };
         } else {
-          condition.where.vod_filmtime = {
+          condition.where.filmtime = {
             [Op.gt]: now / 1000,
           };
         }
@@ -170,17 +170,17 @@ export default app => {
     }
 
     if (stars) {
-      condition.where.vod_stars = stars;
+      condition.where.stars = stars;
     }
 
     if (hits) {
       const arr = hits.split(',');
       if (arr.length > 1) {
-        condition.where.vod_hits = {
+        condition.where.hits = {
           [Op.between]: [arr[0], arr[1]],
         };
       } else {
-        condition.where.vod_hits = {
+        condition.where.hits = {
           [Op.gt]: arr[0],
         };
       }
@@ -189,11 +189,11 @@ export default app => {
     if (gold) {
       const arr = gold.split(',');
       if (arr.length > 1) {
-        condition.where.vod_gold = {
+        condition.where.gold = {
           [Op.between]: [arr[0], arr[1]],
         };
       } else {
-        condition.where.vod_gold = {
+        condition.where.gold = {
           [Op.gt]: arr[0],
         };
       }
@@ -202,11 +202,11 @@ export default app => {
     if (up) {
       const arr = up.split(',');
       if (arr.length > 1) {
-        condition.where.vod_up = {
+        condition.where.up = {
           [Op.between]: [arr[0], arr[1]],
         };
       } else {
-        condition.where.vod_up = {
+        condition.where.up = {
           [Op.gt]: arr[0],
         };
       }
@@ -215,51 +215,51 @@ export default app => {
     if (down) {
       const arr = down.split(',');
       if (arr.length > 1) {
-        condition.where.vod_down = {
+        condition.where.down = {
           [Op.between]: [arr[0], arr[1]],
         };
       } else {
-        condition.where.vod_down = {
+        condition.where.down = {
           [Op.gt]: arr[0],
         };
       }
     }
 
-    if (addtime) {
-      const arr = addtime.split(',');
+    if (created_at) {
+      const arr = created_at.split(',');
       const getTime = time => new Date(time).getTime() / 1000;
       if (arr.length > 1) {
-        condition.where.vod_addtime = {
+        condition.where.created_at = {
           [Op.between]: [getTime(arr[0]), getTime(arr[1])],
         };
       } else {
-        condition.where.vod_addtime = {
+        condition.where.created_at = {
           [Op.gt]: getTime(arr[0]),
         };
       }
     }
 
     if (day) {
-      condition.where.vod_addtime = {
+      condition.where.created_at = {
         [Op.gt]: dayjs().subtract(day, 'day').valueOf() / 1000,
       };
     }
 
     if (tag) {
-      const res = await model.Tag.findAll({ attributes: ['tag_id'], where: { tag_name: tag, tag_sid: 1 } });
-      let ids = res.map(item => item.tag_id);
+      const res = await model.Tag.findAll({ attributes: ['id'], where: { name: tag, sid: 1 } });
+      let ids = res.map(item => item.id);
       if (not) {
         ids = ids.filter(item => item !== not);
       }
-      condition.where.vod_id = ids;
+      condition.where.id = ids;
     } else if (mcid) {
       const arr = mcid.split(',');
-      const res = await model.Mcid.findAll({ attributes: ['mcid_id'], where: { mcid_mid: arr } });
-      let ids = res.map(item => item.mcid_id);
+      const res = await model.Mcid.findAll({ attributes: ['id'], where: { mid: arr } });
+      let ids = res.map(item => item.id);
       if (not) {
         ids = ids.filter(item => item !== not);
       }
-      condition.where.vod_id = ids;
+      condition.where.id = ids;
     }
 
     console.log(condition, 'condition');
@@ -282,89 +282,89 @@ export default app => {
       include: [
         {
           model: model.User,
-          attributes: ['user_id', 'user_name', 'user_nickname', 'user_avatar'],
+          attributes: ['id', 'username', 'nickname', 'avatar'],
           as: 'user',
         },
-        {
-          model: model.Role,
-          as: 'role',
-          attributes: ['role_id', 'role_name', 'role_star'],
-          include: [
-            {
-              model: model.Star,
-              as: 'star',
-              attributes: ['star_id', 'star_name'],
-            },
-          ],
-        },
-        {
-          model: model.Story,
-          as: 'story',
-          attributes: ['story_id', 'story_vid'],
-          include: [
-            {
-              model: model.Part,
-              as: 'part',
-              attributes: ['part_id', 'part_name', 'part_title', 'part_content'],
-              limit: 3,
-              order: [['part_oid', 'DESC']],
-            },
-          ],
-        },
-        { model: model.Music, as: 'music', attributes: ['music_id', 'music_star', 'music_type', 'music_name', 'music_url', 'music_lyric'] },
-        { model: model.Lines, as: 'lines', attributes: ['lines_id', 'lines_role', 'lines_addtime'] },
-        {
-          model: model.Picture,
-          attributes: ['picture_id', 'picture_name', 'picture_pic'],
-          as: 'pic',
-          through: {
-            where: { topic_sid: 1, topic_tsid: 16 },
-            attributes: [],
-          },
-        },
-        {
-          model: model.News,
-          attributes: ['news_id', 'news_name', 'news_pic', 'news_addtime'],
-          as: 'news',
-          through: {
-            where: { topic_sid: 1, topic_tsid: 2 },
-            attributes: [],
-          },
-        },
+        // {
+        //   model: model.Role,
+        //   as: 'role',
+        //   attributes: ['role_id', 'role_name', 'role_star'],
+        //   include: [
+        //     {
+        //       model: model.Star,
+        //       as: 'star',
+        //       attributes: ['star_id', 'star_name'],
+        //     },
+        //   ],
+        // },
+        // {
+        //   model: model.Story,
+        //   as: 'story',
+        //   attributes: ['story_id', 'story_vid'],
+        //   include: [
+        //     {
+        //       model: model.Part,
+        //       as: 'part',
+        //       attributes: ['part_id', 'part_name', 'part_title', 'part_content'],
+        //       limit: 3,
+        //       order: [['part_oid', 'DESC']],
+        //     },
+        //   ],
+        // },
+        // { model: model.Music, as: 'music', attributes: ['music_id', 'music_star', 'music_type', 'music_name', 'music_url', 'music_lyric'] },
+        // { model: model.Lines, as: 'lines', attributes: ['lines_id', 'lines_role', 'lines_created_at'] },
+        // {
+        //   model: model.Picture,
+        //   attributes: ['picture_id', 'picture_name', 'picture_pic'],
+        //   as: 'pic',
+        //   through: {
+        //     where: { sid: 1, tsid: 16 },
+        //     attributes: [],
+        //   },
+        // },
+        // {
+        //   model: model.News,
+        //   attributes: ['news_id', 'news_name', 'news_pic', 'news_created_at'],
+        //   as: 'news',
+        //   through: {
+        //     where: { sid: 1, tsid: 2 },
+        //     attributes: [],
+        //   },
+        // },
         {
           model: model.Subject,
-          attributes: ['vod_id', 'vod_label'],
+          attributes: ['id', 'label'],
           as: 'associate1',
           through: {
-            where: { topic_sid: 1, topic_tsid: 1 },
+            where: { sid: 1, tsid: 1 },
             attributes: [],
           },
         },
         {
           model: model.Subject,
-          attributes: ['vod_id', 'vod_label'],
+          attributes: ['id', 'label'],
           as: 'associate2',
           through: {
-            where: { topic_sid: 1, topic_tsid: 1 },
+            where: { sid: 1, tsid: 1 },
             attributes: [],
           },
         },
       ],
-      where: { vod_id: id, vod_status: 1 },
+      where: { id, status: 1 },
     });
     return result;
   };
 
   Subject.associate = () => {
-    Subject.hasOne(model.User, { foreignKey: 'user_id', sourceKey: 'vod_uid', as: 'user' });
-    Subject.hasMany(model.Role, { foreignKey: 'role_vid', as: 'role' });
-    Subject.hasMany(model.Story, { foreignKey: 'story_vid', as: 'story' });
-    Subject.hasMany(model.Music, { foreignKey: 'music_vid', as: 'music' });
-    Subject.hasMany(model.Lines, { foreignKey: 'lines_vid', as: 'lines' });
-    Subject.belongsToMany(model.Picture, { through: model.Topic, foreignKey: 'topic_did', otherKey: 'topic_tid', as: 'pic' });
-    Subject.belongsToMany(model.News, { through: model.Topic, foreignKey: 'topic_did', otherKey: 'topic_tid', as: 'news' });
-    Subject.belongsToMany(model.Subject, { through: model.Topic, foreignKey: 'topic_tid', otherKey: 'topic_did', as: 'associate1' }); // 正向
-    Subject.belongsToMany(model.Subject, { through: model.Topic, foreignKey: 'topic_did', otherKey: 'topic_tid', as: 'associate2' }); // 反向
+    Subject.hasOne(model.User, { foreignKey: 'id', sourceKey: 'uid', as: 'user' });
+    // Subject.hasMany(model.Role, { foreignKey: 'role_vid', as: 'role' });
+    // Subject.hasMany(model.Story, { foreignKey: 'story_vid', as: 'story' });
+    // Subject.hasMany(model.Music, { foreignKey: 'music_vid', as: 'music' });
+    // Subject.hasMany(model.Lines, { foreignKey: 'lines_vid', as: 'lines' });
+    // Subject.belongsToMany(model.Picture, { through: model.Topic, foreignKey: 'aid', otherKey: 'taid', as: 'pic' });
+    // Subject.belongsToMany(model.News, { through: model.Topic, foreignKey: 'aid', otherKey: 'taid', as: 'news' });
+    Subject.belongsToMany(model.Subject, { through: model.Association, foreignKey: 'taid', otherKey: 'aid', as: 'associate1' }); // 正向
+    Subject.belongsToMany(model.Subject, { through: model.Association, foreignKey: 'aid', otherKey: 'taid', as: 'associate2' }); // 反向
   };
 
   return Subject;

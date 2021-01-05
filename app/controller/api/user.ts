@@ -1,20 +1,20 @@
 import { Controller } from 'egg';
 
 export default class UserController extends Controller {
-  UserLoginTransfer: { user_name: { type: string; required: boolean }; user_password: { type: string; required: boolean } };
-  UserAdd: { user_name: { type: string; required: boolean }; user_password: { type: string }; user_email: { type: string } };
+  UserLoginTransfer: { username: { type: string; required: boolean }; password: { type: string; required: boolean } };
+  UserAdd: { username: { type: string; required: boolean }; password: { type: string }; email: { type: string } };
   constructor(ctx) {
     super(ctx);
 
     this.UserLoginTransfer = {
-      user_name: { type: 'string', required: true },
-      user_password: { type: 'string', required: true },
+      username: { type: 'string', required: true },
+      password: { type: 'string', required: true },
     };
 
     this.UserAdd = {
-      user_name: { type: 'string', required: true },
-      user_password: { type: 'password' },
-      user_email: { type: 'email' },
+      username: { type: 'string', required: true },
+      password: { type: 'password' },
+      email: { type: 'email' },
     };
   }
 
@@ -24,30 +24,29 @@ export default class UserController extends Controller {
     const { service, helper } = ctx;
     // 校验参数
     ctx.validate(this.UserLoginTransfer);
-    const { user_name, user_password } = ctx.request.body;
-    const user = await service.user.findUser({ user_name });
+    const { username, password } = ctx.request.body;
+    const user = await service.user.findUser({ username });
 
     if (!user) {
       helper.fail(ctx, { message: '用户名错误' });
-    } else if (user.user_status === 0) {
+    } else if (user.status === 0) {
       helper.fail(ctx, { message: '用户未审核' });
     } else {
-      const { user_admin, user_id, user_name, user_avatar, user_salt } = user;
-      const pwd = helper.md5(helper.md5(user_password) + user_salt);
-      if (pwd === user.user_password) {
+      const { id, username, avatar, salt } = user;
+      const pwd = helper.md5(helper.md5(password) + salt);
+      if (pwd === user.password) {
         // 生成Token令牌
         const token = app.jwt.sign(
           {
-            user_id,
-            user_name,
-            user_avatar,
-            user_admin,
+            id,
+            username,
+            avatar,
           },
           config.jwt.secret,
           { expiresIn: '7d' }
         );
         try {
-          await app.redis.set(`token_${user.user_id}`, token);
+          await app.redis.set(`token_${user.id}`, token);
           helper.success(ctx, { data: token });
         } catch (e) {
           console.error(e);
@@ -75,7 +74,11 @@ export default class UserController extends Controller {
     const { ctx } = this;
     const { id } = ctx.params;
     const user = await this.service.user.get(id);
-    ctx.helper.success(ctx, { data: user });
+    if (user) {
+      ctx.helper.success(ctx, { data: user });
+    } else {
+      ctx.helper.fail(ctx, { message: '没有找到内容' });
+    }
   }
 
   async list() {
@@ -90,52 +93,52 @@ export default class UserController extends Controller {
     const params = ctx.request.body;
     // 校验参数
     ctx.validate(UserAdd);
-    const { user_name, user_email, user_captcha } = params;
-    if (user_captcha) {
-      const captcha = ctx.cookies.get('captcha', { encrypt: true });
-      if (!(user_captcha === captcha)) {
+    const { username, email, captcha } = params;
+    if (captcha) {
+      const getCaptcha = ctx.cookies.get('captcha', { encrypt: true });
+      if (!(captcha === getCaptcha)) {
         ctx.helper.fail(ctx, { message: '验证码错误' });
         return;
       }
     }
-    if (user_name) {
-      const user = await service.user.findUser({ user_name });
-      if (user.user_name === user_name) {
+    if (username) {
+      const user = await service.user.findUser({ username });
+      if (user.username === username) {
         ctx.helper.fail(ctx, { message: '用户名重复' });
         return;
       }
     }
-    if (user_email) {
-      const email = await service.user.findUser({ user_email });
-      if (email.user_email === user_email) {
+    if (email) {
+      const user = await service.user.findUser({ email });
+      if (user.email === email) {
         ctx.helper.fail(ctx, { message: '邮箱已被使用' });
         return;
       }
     }
     const ip = ctx.request.ip;
     const rand = ctx.helper.randomString(6);
-    params.user_password = ctx.helper.md5(ctx.helper.md5(params.user_password) + rand);
-    const result = await service.user.add({ ...params, user_salt: rand, user_reg_ip: app.utils.Tool.ip2long(ip), user_last_login_ip: app.utils.Tool.ip2long(ip) });
+    params.password = ctx.helper.md5(ctx.helper.md5(params.password) + rand);
+    const result = await service.user.add({ ...params, salt: rand, reg_ip: app.utils.Tool.ip2long(ip), last_login_ip: app.utils.Tool.ip2long(ip) });
     ctx.helper.success(ctx, { data: result });
   }
 
   async edit() {
     const { ctx, service } = this;
     const params = ctx.request.body;
-    const { user_password, user_email, user_id, user_username } = params;
-    if (user_username) {
-      delete params.user_username;
+    const { password, email, id, username } = params;
+    if (username) {
+      delete params.username;
       ctx.helper.fail(ctx, { message: '用户名不能修改' });
       return;
     }
-    if (user_password) {
+    if (password) {
       const rand = ctx.helper.randomString(6);
-      params.user_salt = rand;
-      params.user_password = ctx.helper.md5(ctx.helper.md5(params.user_password) + rand);
+      params.salt = rand;
+      params.password = ctx.helper.md5(ctx.helper.md5(params.password) + rand);
     }
-    if (user_email) {
-      const email = await service.user.findUser({ user_email, not_id: user_id });
-      if (email.user_email === user_email) {
+    if (email) {
+      const user = await service.user.findUser({ email, not_id: id });
+      if (user.email === email) {
         ctx.helper.fail(ctx, { message: '邮箱已被使用' });
         return;
       }

@@ -9,35 +9,35 @@ export default class SubjectController extends Controller {
     let format: any = {};
     if (data) {
       format = ctx.helper.copy(data);
-      const { vod_mcid, vod_actor, vod_director, vod_original, vod_url, vod_play, vod_cid, vod_content } = format;
+      const { mcid, actor, director, original, url, play, cid, content } = format;
       const typeList = await service.subject.typeList();
-      format.vod_cid = typeList.filter(item => item.list_id === vod_cid);
-      format.vod_pid = typeList.filter(item => item.list_id === format.vod_cid[0].list_pid);
-      format.vod_content = vod_content.replace(/<.*?>/g, '');
-      if (vod_mcid) {
-        format.vod_mcid = await service.subject.mcat({ cid: vod_mcid.split(',') });
+      format.cid = typeList.filter(item => item.list_id === cid);
+      format.pid = typeList.filter(item => item.list_id === format.cid[0].list_pid);
+      format.content = content.replace(/<.*?>/g, '');
+      if (mcid) {
+        format.mcid = await service.subject.mcat({ cid: mcid.split(',') });
       }
 
-      if (vod_actor) {
-        format.vod_actor = await ctx.getSatr(vod_actor.split(','), service);
+      if (actor) {
+        format.actor = await ctx.getSatr(actor.split(','), service);
       }
 
-      if (vod_director) {
-        format.vod_director = await ctx.getSatr(vod_director.split(','), service);
+      if (director) {
+        format.director = await ctx.getSatr(director.split(','), service);
       }
 
-      if (vod_original) {
-        format.vod_original = await ctx.getSatr(vod_original.split(','), service);
+      if (original) {
+        format.original = await ctx.getSatr(original.split(','), service);
       }
 
-      if (vod_url) {
-        const play = await service.subject.play();
-        const playArr = vod_play.split('$$$');
-        const urlArr = vod_url.split('$$$');
+      if (url) {
+        const playlist = await service.subject.play();
+        const playArr = play.split('$$$');
+        const urlArr = url.split('$$$');
 
-        play.forEach(({ play_display }, index) => {
+        playlist.forEach(({ play_display }, index) => {
           if (play_display === 0) {
-            play.splice(index, 1);
+            playlist.splice(index, 1);
             playArr.splice(index, 1);
           }
         });
@@ -47,7 +47,7 @@ export default class SubjectController extends Controller {
         const key = ctx.helper.md5(String(new Date().getTime()) + id + 'plain');
         playArr.forEach((item, index) => {
           const url = this.playlist_one(urlArr[index], key, item);
-          const info = play.filter(sitem => sitem.play_name === item)[0];
+          const info = playlist.filter(sitem => sitem.play_name === item)[0];
           const price = url[0].pic || 0;
           let i = 0;
           const obj = {
@@ -68,11 +68,11 @@ export default class SubjectController extends Controller {
             i++;
           }
         });
-        format.hits = await ctx.hits({ arr: data, name: 'vod', model: 'Subject' }, app);
+        format.hits = await ctx.hits({ arr: data, model: 'Subject' }, app);
         format.key = key;
-        format.vod_url = list;
-        delete format.vod_play;
-        ctx.helper.deleleParams(format, 'vod');
+        format.url = list;
+        delete format.play;
+        ctx.helper.deleleParams(format);
       }
       ctx.helper.success(ctx, { data: format });
     } else {
@@ -91,9 +91,9 @@ export default class SubjectController extends Controller {
     const { ctx, service } = this;
     const result = await service.subject.add(ctx.request.body);
     if (result) {
-      const { vod_id, vod_cid, vod_uid } = result;
+      const { id, cid, uid } = result;
       const ip = this.ctx.request.ip;
-      await service.feed.add({ ip, sid: 1, cid: vod_cid, uid: vod_uid, type: 4, feed_vid: vod_id });
+      await service.feed.add({ ip, sid: 1, cid, uid, type: 4, feed_vid: id });
       ctx.helper.success(ctx, { data: result, message: '添加成功' });
     } else {
       ctx.helper.fail(ctx, { data: 0, message: '添加失败' });

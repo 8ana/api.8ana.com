@@ -1,48 +1,12 @@
 export default app => {
   // 获取数据类型
-  const { INTEGER, STRING } = app.Sequelize;
+  const { INTEGER, STRING, TINYINT } = app.Sequelize;
 
   return {
-    m_cid: {
-      autoIncrement: true,
-      type: INTEGER.UNSIGNED,
-      allowNull: false,
-      primaryKey: true,
-    },
-    m_list_id: {
-      type: INTEGER.UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    m_name: {
-      type: STRING(30),
-      allowNull: false,
-      defaultValue: '',
-    },
-    m_ename: {
-      type: STRING(255),
-      allowNull: false,
-      defaultValue: '',
-    },
-    m_title: {
-      type: STRING(255),
-      allowNull: false,
-      defaultValue: '',
-    },
-    m_keywords: {
-      type: STRING(255),
-      allowNull: false,
-      defaultValue: '',
-    },
-    m_description: {
-      type: STRING(255),
-      allowNull: false,
-      defaultValue: '',
-    },
-    m_order: {
-      type: INTEGER.UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
-    },
+    id: { autoIncrement: true, type: INTEGER.UNSIGNED, allowNull: false, primaryKey: true, comment: '自增id' },
+    cid: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '父类id' },
+    name: { type: STRING(30), allowNull: false, defaultValue: '', comment: '名字' },
+    title: { type: STRING(30), allowNull: false, defaultValue: '', comment: '英文名' },
+    rank: { type: INTEGER.UNSIGNED, allowNull: false, defaultValue: 0, comment: '排序' },
   };
 };

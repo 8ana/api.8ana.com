@@ -37,16 +37,16 @@ export default {
     return starList;
   },
   // 日 周 月 总 统计
-  async hits({ arr, name, model }, app) {
+  async hits({ arr, model }, app) {
     const h = [];
     // 初始化值
-    const hit = `${name}_hits`;
-    const month = `${name}_hits_month`;
-    const week = `${name}_hits_week`;
-    const day = `${name}_hits_day`;
-    const lasttime = `${name}_hits_lasttime`;
+    const hit = `hits`;
+    const month = `hits_month`;
+    const week = `hits_week`;
+    const day = `hits_day`;
+    const lasttime = `hits_lasttime`;
     const last = typeof arr[lasttime] === 'number' && String(arr[lasttime]).length === 10 ? arr[lasttime] * 1000 : dayjs(arr[lasttime]).valueOf();
-    const rid = `${name}_id`;
+    const rid = `id`;
     const now = new Date();
     const old = new Date(last);
     h[hit] = arr[hit];

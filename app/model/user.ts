@@ -6,15 +6,15 @@ export default app => {
   const { Op } = Sequelize;
 
   const userSchema = user(app);
-  const User = model.define(`${app.config.prefix}user`, userSchema);
+  const User = model.define('user', userSchema);
 
-  User.query = async ({ attributes, pageSize = 10, pageNo = 1, order = ['user_reg_time', 'DESC'] }) => {
+  User.query = async ({ attributes, pageSize = 10, pageNo = 1, order = ['created_at', 'DESC'] }) => {
     const condition = {
       attributes,
       order: [order],
       offset: pageSize * (pageNo - 1),
       limit: app.utils.Tool.toInt(pageSize),
-      where: { user_status: 1 },
+      where: { status: 1 },
     };
     const { count, rows } = await User.findAndCountAll(condition);
 
@@ -28,20 +28,20 @@ export default app => {
     };
   };
 
-  User.get = async (params, attributes = ['user_id', 'user_name', 'user_admin']) => {
+  User.get = async (params, attributes = ['id', 'username']) => {
     const condition = {
       attributes,
       where: {},
     };
     if (params.not_id) {
-      params.user_id = {
+      params.id = {
         [Op.not]: params.not_id,
       };
       delete params.not_id;
     }
     condition.where = params;
     const result = await User.findOne(condition);
-    return result || {};
+    return result;
   };
 
   // 添加
@@ -51,10 +51,10 @@ export default app => {
   };
   // 更新
   User.edit = async params => {
-    const { user_id } = params;
-    const result = await User.update(params, { where: { user_id } });
+    const { id } = params;
+    const result = await User.update(params, { where: { id } });
     console.log(result);
-    return user_id;
+    return id;
   };
 
   // 删除

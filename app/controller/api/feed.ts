@@ -9,8 +9,8 @@ export default class FeedController extends Controller {
     let format: any = {};
     if (data) {
       format = ctx.helper.copy(data);
-      format.hits = await ctx.hits({ arr: data, name: 'feed', model: 'Feed' }, app);
-      ctx.helper.deleleParams(format, 'feed');
+      format.hits = await ctx.hits({ arr: data, model: 'Feed' }, app);
+      ctx.helper.deleleParams(format);
       ctx.helper.success(ctx, { data: format });
     } else {
       ctx.helper.fail(ctx, { data, message: '没有找到内容' });

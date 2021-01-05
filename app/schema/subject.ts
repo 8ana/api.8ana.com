@@ -1,308 +1,65 @@
 export default app => {
   // 获取数据类型
-  const { MEDIUMINT, SMALLINT, STRING, CHAR, TINYINT, DECIMAL, TEXT, INTEGER, BIGINT } = app.Sequelize;
+  const { NOW, DATE, STRING, CHAR, TINYINT, DECIMAL, TEXT, INTEGER, BIGINT } = app.Sequelize;
 
   return {
-    vod_id: {
-      autoIncrement: true,
-      type: MEDIUMINT.UNSIGNED,
-      allowNull: false,
-      primaryKey: true,
-    },
-    vod_cid: {
-      type: SMALLINT,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    vod_pid: {
-      type: SMALLINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_mcid: {
-      type: STRING(222),
-      defaultValue: '',
-    },
-    vod_name: {
-      type: STRING(255),
-      allowNull: false,
-      defaultValue: '',
-    },
-    vod_foreign: {
-      type: STRING(255),
-      defaultValue: '',
-      comment: '操作人',
-    },
-    vod_aliases: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_title: {
-      type: STRING(255),
-      allowNull: false,
-      defaultValue: '',
-    },
-    vod_tag: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_label: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_color: {
-      type: CHAR(8),
-      defaultValue: '',
-    },
-    vod_actor: {
-      type: STRING(8000),
-      defaultValue: '',
-    },
-    vod_director: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_content: {
-      type: TEXT,
-      defaultValue: '',
-      allowNull: false,
-    },
-    vod_pic: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_pic_thumb: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_bigpic: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_website: {
-      type: STRING(255),
-      defaultValue: '',
-      comment: '官网',
-    },
-    vod_original: {
-      type: STRING(255),
-      defaultValue: '',
-      comment: '漫画原作',
-    },
-    vod_company: {
-      type: STRING(255),
-      defaultValue: '',
-      comment: '制作公司',
-    },
-    vod_remark: {
-      type: STRING(255),
-      defaultValue: '',
-      comment: '简评',
-    },
-    vod_diantai: {
-      type: STRING(50),
-      defaultValue: '',
-    },
-    vod_tvcont: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_tvexp: {
-      type: TEXT,
-      defaultValue: '',
-    },
-    vod_prty: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_time: {
-      type: STRING(10),
-      defaultValue: '',
-      comment: '时间',
-    },
-    vod_area: {
-      type: CHAR(10),
-      defaultValue: '',
-    },
-    vod_language: {
-      type: CHAR(10),
-      defaultValue: '',
-    },
-    vod_year: {
-      type: SMALLINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_continu: {
-      type: STRING(20),
-      defaultValue: '0',
-    },
-    vod_total: {
-      type: STRING(20),
-      defaultValue: '',
-    },
-    vod_isend: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_addtime: {
-      type: BIGINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_hits: {
-      type: MEDIUMINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_hits_day: {
-      type: MEDIUMINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_hits_week: {
-      type: MEDIUMINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_hits_month: {
-      type: MEDIUMINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_hits_lasttime: {
-      type: BIGINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_stars: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_status: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 1,
-    },
-    vod_lock: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_copyright: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_up: {
-      type: MEDIUMINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_down: {
-      type: MEDIUMINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_play: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_playoid: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_server: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_url: {
-      type: TEXT,
-      defaultValue: '',
-    },
-    vod_inputer: {
-      type: STRING(30),
-      defaultValue: '',
-    },
-    vod_reurl: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_jumpurl: {
-      type: STRING(150),
-      defaultValue: '',
-    },
-    vod_letter: {
-      type: CHAR(2),
-      defaultValue: '',
-    },
-    vod_skin: {
-      type: STRING(30),
-      defaultValue: '',
-    },
-    vod_gold: {
-      type: DECIMAL(3, 1),
-      defaultValue: 0.0,
-    },
-    vod_golder: {
-      type: SMALLINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_isfilm: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 1,
-    },
-    vod_filmtime: {
-      type: BIGINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_length: {
-      type: SMALLINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_weekday: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    reid: {
-      type: INTEGER.UNSIGNED,
-      defaultValue: 0,
-    },
-    HasGetComment: {
-      type: SMALLINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_letters: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_stitle: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_keywords: {
-      type: STRING(255),
-      defaultValue: '',
-      comment: '关键字',
-    },
-    vod_description: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_doubanid: {
-      type: INTEGER.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_baike: {
-      type: STRING(255),
-      defaultValue: '',
-    },
-    vod_vipplay: {
-      type: TINYINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_pay: {
-      type: SMALLINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_downpay: {
-      type: SMALLINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_trysee: {
-      type: SMALLINT.UNSIGNED,
-      defaultValue: 0,
-    },
-    vod_uid: {
-      type: INTEGER.UNSIGNED,
-      defaultValue: 0,
-    },
+    id: { type: INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true, comment: '自增id' },
+    cid: { type: INTEGER.UNSIGNED, allowNull: false, defaultValue: 0, comment: '分类id' },
+    uid: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '用户id' },
+    mcid: { type: STRING(255), defaultValue: '', comment: '小分类' },
+    name: { type: STRING(255), allowNull: false, defaultValue: '', comment: '名字' },
+    foreign: { type: STRING(255), defaultValue: '', comment: '外文名' },
+    aliases: { type: STRING(255), defaultValue: '', comment: '别名' },
+    title: { type: STRING(255), allowNull: false, defaultValue: '', comment: '副标题' },
+    tag: { type: STRING(255), defaultValue: '', comment: '标签' },
+    label: { type: STRING(255), defaultValue: '', comment: '关联别名例:第1季|第2季' },
+    color: { type: CHAR(8), defaultValue: '', comment: '标题颜色' },
+    bg_color: { type: CHAR(8), defaultValue: '', comment: '背景颜色' },
+    star: { type: STRING(8000), defaultValue: '', comment: '明星' },
+    director: { type: STRING(255), defaultValue: '', comment: '导演' },
+    pic: { type: STRING(255), defaultValue: '', comment: '封面' },
+    pic_thumb: { type: STRING(255), defaultValue: '', comment: '小图' },
+    bigpic: { type: STRING(255), defaultValue: '', comment: '大图' },
+    website: { type: STRING(255), defaultValue: '', comment: '官网' },
+    original: { type: STRING(255), defaultValue: '', comment: '漫画原作' },
+    company: { type: STRING(255), defaultValue: '', comment: '制作公司' },
+    remark: { type: STRING(255), defaultValue: '', comment: '简评' },
+    baike: { type: STRING(255), defaultValue: '', comment: '百科网址' },
+    time: { type: STRING(10), defaultValue: '', comment: '放送时间' },
+    area: { type: CHAR(10), defaultValue: '', comment: '地区' },
+    language: { type: CHAR(10), defaultValue: '', comment: '语言' },
+    play: { type: STRING(255), defaultValue: '', comment: '播放源英文名，以$$$分隔' },
+    inputer: { type: STRING(30), defaultValue: '', comment: '录入人' },
+    jumpurl: { type: STRING(150), defaultValue: '', comment: '跳转url' },
+    letter: { type: CHAR(2), defaultValue: '', comment: '首字母' },
+    letters: { type: STRING(255), defaultValue: '', comment: '拼音' },
+    seo_title: { type: STRING(255), defaultValue: '', comment: 'seo标题' },
+    seo_keywords: { type: STRING(255), defaultValue: '', comment: 'seo关键字' },
+    seo_description: { type: STRING(255), defaultValue: '', comment: 'seo简介' },
+    filmtime: { type: STRING(255), defaultValue: '', comment: '上映日期' },
+    length: { type: STRING(255), defaultValue: '', comment: '片长' },
+    url: { type: TEXT, defaultValue: '', comment: '播放集合，以$$$分隔' },
+    content: { type: TEXT, defaultValue: '', allowNull: false, comment: '简介' },
+    other: { type: TEXT, defaultValue: '', allowNull: false, comment: '其他项' },
+    prty: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '推荐级别' },
+    year: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '年份' },
+    continu: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '连载' },
+    total: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '总集数' },
+    isend: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '是否完结' },
+    stars: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '星级' },
+    up: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '顶' },
+    down: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '踩' },
+    rank: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '播放源排序' },
+    gold: { type: DECIMAL(3, 1), defaultValue: 0.0, comment: '评分' },
+    isfilm: { type: TINYINT.UNSIGNED, defaultValue: 1, comment: '是否开播0:未放送1:已放送' },
+    weekday: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '星期' },
+    douban: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '豆瓣id' },
+    imdb: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: 'IMDB' },
+    status: { type: INTEGER.UNSIGNED, allowNull: true, defaultValue: 0, comment: '状态：0正常 1禁用 2审核中 3审核拒绝 4审核忽略 -1删除' },
+    hits: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '总' },
+    hits_day: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '日' },
+    hits_week: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '周' },
+    hits_month: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '月' },
+    hits_lasttime: { type: DATE, allowNull: false, defaultValue: NOW, comment: '热度更新时间' },
   };
 };

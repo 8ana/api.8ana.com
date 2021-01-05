@@ -1,73 +1,13 @@
 export default app => {
   // 获取数据类型
-  const { MEDIUMINT, STRING, SMALLINT, TINYINT } = app.Sequelize;
+  const { INTEGER, STRING, TINYINT } = app.Sequelize;
 
   return {
-    play_id: {
-      autoIncrement: true,
-      type: MEDIUMINT.UNSIGNED,
-      allowNull: false,
-      primaryKey: true,
-    },
-    play_title: {
-      type: STRING(25),
-      allowNull: false,
-      defaultValue: '',
-    },
-    play_name: {
-      type: STRING(25),
-      allowNull: false,
-      defaultValue: '',
-    },
-    play_oid: {
-      type: SMALLINT.UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    play_copyright: {
-      type: TINYINT.UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    play_apiurl: {
-      type: STRING(255),
-      allowNull: false,
-      defaultValue: '',
-    },
-    play_downurl: {
-      type: STRING(255),
-      allowNull: false,
-      defaultValue: '',
-    },
-    play_encry: {
-      type: TINYINT.UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    play_key: {
-      type: STRING(100),
-      allowNull: false,
-      defaultValue: '',
-    },
-    play_keytime: {
-      type: SMALLINT.UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    play_status: {
-      type: TINYINT.UNSIGNED,
-      allowNull: false,
-      defaultValue: 1,
-    },
-    play_display: {
-      type: TINYINT.UNSIGNED,
-      allowNull: false,
-      defaultValue: 1,
-    },
-    play_cloud: {
-      type: TINYINT.UNSIGNED,
-      allowNull: false,
-      defaultValue: 0,
-    },
+    id: { autoIncrement: true, type: INTEGER.UNSIGNED, allowNull: false, primaryKey: true, comment: '自增id' },
+    title: { type: STRING(30), allowNull: false, defaultValue: '', comment: '中文名' },
+    name: { type: STRING(30), allowNull: false, defaultValue: '', comment: '英文名' },
+    rank: { type: INTEGER.UNSIGNED, allowNull: false, defaultValue: 0, comment: '排序' },
+    status: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '用户状态：0正常 1禁用 2审核中 3审核拒绝 4审核忽略' },
+    display: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '0:不显示1:显示' },
   };
 };

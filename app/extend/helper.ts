@@ -18,12 +18,11 @@ export default {
     ctx.status = 200;
   },
   // 处理失败请求后的响应
-  fail(ctx: Context, { message = '', status = 500, data = {} }: IFail) {
+  fail(ctx: Context, { message = '', status = 500 }: IFail) {
     console.log(ctx.errCodes[status], status, 'errCodes');
     ctx.body = {
       status: status || 500,
       message: message || ctx.errCodes[status],
-      data: data || {},
     };
     ctx.status = 200;
   },
@@ -44,11 +43,11 @@ export default {
     }
     return pwd;
   },
-  deleleParams(obj, name) {
-    delete obj[`${name}_hits`];
-    delete obj[`${name}_hits_day`];
-    delete obj[`${name}_hits_week`];
-    delete obj[`${name}_hits_month`];
-    delete obj[`${name}_hits_lasttime`];
+  deleleParams(obj) {
+    delete obj.hits;
+    delete obj.hits_day;
+    delete obj.hits_week;
+    delete obj.hits_month;
+    delete obj.hits_lasttime;
   },
 };
