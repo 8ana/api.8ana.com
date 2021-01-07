@@ -63,11 +63,10 @@ export default app => {
   };
 
   Subject.mcat = async params => {
-    const { orderBy = 'rank', order = 'DESC', sid = 3, cid = '' } = params;
+    const { orderBy = 'rank', order = 'DESC', cid = '' } = params;
     const rows = await Mcat.findAll({
       attributes: ['cid', 'name'],
       where: {
-        list_id: sid,
         cid,
       },
       order: [[orderBy, order]],
@@ -90,7 +89,7 @@ export default app => {
       order: [order],
       offset: pageSize * (pageNo - 1),
       limit: app.utils.Tool.toInt(pageSize),
-      where: { status: 1 },
+      where: { status: 0 },
     };
 
     if (wd) {
@@ -350,7 +349,7 @@ export default app => {
           },
         },
       ],
-      where: { id, status: 1 },
+      where: { id, status: 0 },
     });
     return result;
   };

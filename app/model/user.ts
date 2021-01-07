@@ -14,7 +14,7 @@ export default app => {
       order: [order],
       offset: pageSize * (pageNo - 1),
       limit: app.utils.Tool.toInt(pageSize),
-      where: { status: 1 },
+      where: { status: 0 },
     };
     const { count, rows } = await User.findAndCountAll(condition);
 
@@ -28,7 +28,7 @@ export default app => {
     };
   };
 
-  User.get = async (params, attributes = ['id', 'username']) => {
+  User.get = async (params, attributes = ['id', 'username', 'admin']) => {
     const condition = {
       attributes,
       where: {},

@@ -40,13 +40,13 @@ export default {
   async hits({ arr, model }, app) {
     const h = [];
     // 初始化值
-    const hit = `hits`;
-    const month = `hits_month`;
-    const week = `hits_week`;
-    const day = `hits_day`;
-    const lasttime = `hits_lasttime`;
-    const last = typeof arr[lasttime] === 'number' && String(arr[lasttime]).length === 10 ? arr[lasttime] * 1000 : dayjs(arr[lasttime]).valueOf();
-    const rid = `id`;
+    const hit = 'hits';
+    const month = 'hits_month';
+    const week = 'hits_week';
+    const day = 'hits_day';
+    const lasttime = 'hits_lasttime';
+    const last = dayjs(arr[lasttime]).valueOf();
+    const rid = 'id';
     const now = new Date();
     const old = new Date(last);
     h[hit] = arr[hit];
@@ -75,7 +75,7 @@ export default {
     }
     h[rid] = arr[rid];
     h[hit] = arr[hit] + 1;
-    h[lasttime] = typeof arr[lasttime] === 'number' ? new Date().getTime() : dayjs().format();
+    h[lasttime] = dayjs().format();
     await app.model[model].update(h, { where: { [rid]: arr[rid] } });
     delete h[rid];
     delete h[lasttime];

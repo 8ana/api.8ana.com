@@ -18,6 +18,7 @@ export default app => {
     salt: { type: CHAR(10), allowNull: false, comment: '密码加盐' },
     amount: { type: DECIMAL(8, 2), allowNull: false, defaultValue: 0.0, comment: '余额' },
     sex: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '1:男2:女' },
+    admin: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '权限' },
     score: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '积分' },
     login: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '登录次数' },
     email_confirmed: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '0:未验证1:已验证' },

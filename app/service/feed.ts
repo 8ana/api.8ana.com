@@ -18,16 +18,11 @@ export default class Feed extends Service {
   }
 
   async add(params: any = {}) {
-    const { sid, cid, uid, type, ip } = params;
+    const { ip } = params;
     const { app } = this;
     return await app.model.Feed.add({
       ...params,
-      sid,
-      cid,
-      uid,
-      type,
       ip: app.utils.Tool.ip2long(ip),
-      status: 1,
     });
   }
 

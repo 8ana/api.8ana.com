@@ -29,16 +29,17 @@ export default class UserController extends Controller {
 
     if (!user) {
       helper.fail(ctx, { message: '用户名错误' });
-    } else if (user.status === 0) {
+    } else if (user.status === 2) {
       helper.fail(ctx, { message: '用户未审核' });
     } else {
-      const { id, username, avatar, salt } = user;
+      const { id, username, avatar, salt, admin } = user;
       const pwd = helper.md5(helper.md5(password) + salt);
       if (pwd === user.password) {
         // 生成Token令牌
         const token = app.jwt.sign(
           {
             id,
+            admin,
             username,
             avatar,
           },
@@ -103,14 +104,14 @@ export default class UserController extends Controller {
     }
     if (username) {
       const user = await service.user.findUser({ username });
-      if (user.username === username) {
+      if (user && user.username === username) {
         ctx.helper.fail(ctx, { message: '用户名重复' });
         return;
       }
     }
     if (email) {
       const user = await service.user.findUser({ email });
-      if (user.email === email) {
+      if (user && user.email === email) {
         ctx.helper.fail(ctx, { message: '邮箱已被使用' });
         return;
       }

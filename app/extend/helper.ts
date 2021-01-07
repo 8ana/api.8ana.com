@@ -44,7 +44,7 @@ export default {
     return pwd;
   },
   deleleParams(obj) {
-    delete obj.hits;
+    // delete obj.hits;
     delete obj.hits_day;
     delete obj.hits_week;
     delete obj.hits_month;

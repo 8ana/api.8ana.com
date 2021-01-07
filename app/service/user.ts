@@ -10,7 +10,7 @@ export default class User extends Service {
   }
   // 登录时验证用户信息
   async findUser(params = {}) {
-    return await this.app.model.User.get(params, ['id', 'password', 'username', 'avatar', 'status', 'salt', 'email']);
+    return await this.app.model.User.get(params, ['id', 'admin', 'password', 'username', 'avatar', 'status', 'salt', 'email']);
   }
 
   async list(params = {}) {

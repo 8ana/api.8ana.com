@@ -11,8 +11,8 @@ export default class SubjectController extends Controller {
       format = ctx.helper.copy(data);
       const { mcid, actor, director, original, url, play, cid, content } = format;
       const typeList = await service.subject.typeList();
-      format.cid = typeList.filter(item => item.list_id === cid);
-      format.pid = typeList.filter(item => item.list_id === format.cid[0].list_pid);
+      format.cid = typeList.filter(item => item.id === cid);
+      format.pid = typeList.filter(item => item.id === format.cid[0].pid);
       format.content = content.replace(/<.*?>/g, '');
       if (mcid) {
         format.mcid = await service.subject.mcat({ cid: mcid.split(',') });
@@ -32,45 +32,46 @@ export default class SubjectController extends Controller {
 
       if (url) {
         const playlist = await service.subject.play();
-        const playArr = play.split('$$$');
-        const urlArr = url.split('$$$');
+        if (playlist.length) {
+          const playArr = play.split('$$$');
+          const urlArr = url.split('$$$');
+          playlist.forEach(({ display }, index) => {
+            if (display === 0) {
+              playlist.splice(index, 1);
+              playArr.splice(index, 1);
+            }
+          });
 
-        playlist.forEach(({ play_display }, index) => {
-          if (play_display === 0) {
-            playlist.splice(index, 1);
-            playArr.splice(index, 1);
-          }
-        });
-
-        const playText = ['免费观看', 'VIP免费观看', '单片付费', 'VIP提前看', '单集付费提前看']; // 0 免费观看 1 VIP免费观看 2 单片付费 3 单集付费提前看
-        const list: Array<any> = [];
-        const key = ctx.helper.md5(String(new Date().getTime()) + id + 'plain');
-        playArr.forEach((item, index) => {
-          const url = this.playlist_one(urlArr[index], key, item);
-          const info = playlist.filter(sitem => sitem.play_name === item)[0];
-          const price = url[0].pic || 0;
-          let i = 0;
-          const obj = {
-            // player_sort: info.play_oid,
-            // play_sid: index + 1,
-            play_title: info.play_title,
-            play_name: item,
-            play_count: url.length,
-            play_price: playText[price],
-            play_urls: url,
-          };
-          if (item === 'all' || item === 'quote') {
-            format[item] = obj.play_urls.map(({ path, pic }) => {
-              return item === 'all' ? { price: playText[pic || 0], path } : { path };
-            });
-          } else {
-            list[i] = obj;
-            i++;
-          }
-        });
+          const playText = ['免费观看', 'VIP免费观看', '单片付费', 'VIP提前看', '单集付费提前看']; // 0 免费观看 1 VIP免费观看 2 单片付费 3 单集付费提前看
+          const list: Array<any> = [];
+          const key = ctx.helper.md5(String(new Date().getTime()) + id + 'plain');
+          playArr.forEach((item, index) => {
+            const url = this.playlist_one(urlArr[index], key, item);
+            const info = playlist.filter(sitem => sitem.name === item)[0];
+            const price = url[0].pic || 0;
+            let i = 0;
+            const obj = {
+              // player_sort: info.oid,
+              // sid: index + 1,
+              title: info.title,
+              name: item,
+              count: url.length,
+              price: playText[price],
+              urls: url,
+            };
+            if (item === 'all' || item === 'quote') {
+              format[item] = obj.urls.map(({ path, pic }) => {
+                return item === 'all' ? { price: playText[pic || 0], path } : { path };
+              });
+            } else {
+              list[i] = obj;
+              i++;
+            }
+          });
+          format.key = key;
+          format.url = list;
+        }
         format.hits = await ctx.hits({ arr: data, model: 'Subject' }, app);
-        format.key = key;
-        format.url = list;
         delete format.play;
         ctx.helper.deleleParams(format);
       }
@@ -89,11 +90,14 @@ export default class SubjectController extends Controller {
 
   async add() {
     const { ctx, service } = this;
-    const result = await service.subject.add(ctx.request.body);
+    const { user } = ctx.state;
+    const params = ctx.request.body;
+    params.uid = user.id;
+    const result = await service.subject.add(params);
     if (result) {
       const { id, cid, uid } = result;
       const ip = this.ctx.request.ip;
-      await service.feed.add({ ip, sid: 1, cid, uid, type: 4, feed_vid: id });
+      await service.feed.add({ ip, sid: 1, cid, uid, type: 4, aid: id });
       ctx.helper.success(ctx, { data: result, message: '添加成功' });
     } else {
       ctx.helper.fail(ctx, { data: 0, message: '添加失败' });
