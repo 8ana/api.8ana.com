@@ -28,6 +28,7 @@
   "devDependencies": {
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.16",
+    "@types/socket.io": "^2.1.12",
     "@types/supertest": "^2.0.10",
     "autod": "^3.1.1",
     "autod-egg": "^1.1.0",
@@ -47,9 +48,9 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-8ana",
+    "start": "egg-scripts start --sticky --daemon --title=egg-server-8ana",
     "stop": "egg-scripts stop --title=egg-server-8ana",
-    "dev": "egg-bin dev -- --inspect",
+    "dev": "egg-bin dev --sticky --inspect",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",

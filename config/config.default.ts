@@ -69,7 +69,7 @@ export default (appInfo: EggAppInfo) => {
 
   config.io = {
     namespace: {
-      '/': {
+      '/io': {
         connectionMiddleware: ['auth'],
         packetMiddleware: [],
       },

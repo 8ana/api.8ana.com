@@ -39,10 +39,6 @@ module.exports = (app: Application) => {
 
   router.get('/news', controller.news.list);
 
-  router.get('/login', controller.home.login);
-  router.get('/push', controller.home.push);
-  router.get('/test', controller.home.test);
-
   // socket.io
-  io.route('/api/io/disconnect', io.controller.chat.disconnect);
+  io.of('/io').route('exchange', io.controller.nsp.exchange);
 };

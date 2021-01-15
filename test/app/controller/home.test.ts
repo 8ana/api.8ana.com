@@ -1,9 +1,8 @@
-'use strict';
-
-const { app, assert } = require('egg-mock/bootstrap');
+import { app, assert } from 'egg-mock/bootstrap';
 
 describe('test/app/controller/home.test.js', () => {
   it('should assert', () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const pkg = require('../../../package.json');
     assert(app.config.keys.startsWith(pkg.name));
 
@@ -12,9 +11,6 @@ describe('test/app/controller/home.test.js', () => {
   });
 
   it('should GET /', () => {
-    return app.httpRequest()
-      .get('/')
-      .expect('hi, egg')
-      .expect(200);
+    return app.httpRequest().get('/').expect('hi, egg').expect(200);
   });
 });

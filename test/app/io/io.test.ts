@@ -1,15 +1,10 @@
-'use strict';
-
-const egg = require('egg-mock');
-const assert = require('assert');
-// const fs = require('fs');
-const ioc = require('socket.io-client');
-const superAgent = require('superagent');
-
+import { app, assert } from 'egg-mock/bootstrap';
+import ioc = require('socket.io-client');
+console.log('进来了！！！');
 // 见 https://github.com/eggjs/egg-mock/blob/master/lib/cluster.js#L65
-const basePort = 17001;
+const basePort = 7001;
 
-function client(opts = {}) {
+function client(opts: any = {}) {
   let url = 'http://127.0.0.1:' + basePort;
   if (opts.query) {
     url += '?' + opts.query;
@@ -18,28 +13,15 @@ function client(opts = {}) {
 }
 
 async function sleep(second) {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     setTimeout(() => {
       resolve();
     }, second * 1000);
   });
 }
 
-describe('test/socketio.test.js', () => {
-  it('should start http server', async () => {
-    const app = egg.cluster({ port: basePort });
-    await app.ready();
-
-    const res = await superAgent.get(`http://127.0.0.1:${basePort}/test`);
-    assert(res.text === 'test');
-
-    await app.close();
-  });
-
+describe('test/app/io/io.test.js', () => {
   it('should message sent to the specified client', async () => {
-    const app = egg.cluster({ port: basePort });
-    await app.ready();
-
     const pass = [false, false];
     // socket client1
     const res1 = await app.httpRequest().get('/login?id=100&name=aaa').expect(200);
@@ -49,7 +31,6 @@ describe('test/socketio.test.js', () => {
     client1.on('connect', () => {
       console.error('client1 on connect ');
     });
-    client1.on('disconnect', () => {});
     client1.on('message', msg => {
       console.log('client1 on message: ', msg);
       assert(msg === 'msg1');

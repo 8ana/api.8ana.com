@@ -1,8 +1,6 @@
-'use strict';
+import { Controller } from 'egg';
 
-const Controller = require('egg').Controller;
-
-class NewsController extends Controller {
+export default class NewsController extends Controller {
   async list() {
     const dataList = {
       list: [
@@ -10,8 +8,6 @@ class NewsController extends Controller {
         { id: 2, title: 'this is news 2', url: '/news/2' },
       ],
     };
-    await this.ctx.render('news/table.tpl', dataList);
+    await this.ctx.render('news/list.tpl', dataList);
   }
 }
-
-module.exports = NewsController;

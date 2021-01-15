@@ -2,8 +2,8 @@
 // Do not modify this file!!!!!!!!!
 
 import 'egg';
-import ExportHome = require('../../../app/controller/home');
-import ExportNews = require('../../../app/controller/news');
+import ExportHome from '../../../app/controller/home';
+import ExportNews from '../../../app/controller/news';
 import ExportApiActor = require('../../../app/controller/api/actor');
 import ExportApiCaptcha from '../../../app/controller/api/captcha';
 import ExportApiFavorite = require('../../../app/controller/api/favorite');
