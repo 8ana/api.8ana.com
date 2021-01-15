@@ -7,10 +7,11 @@ type AnyFunc<T = any> = (...args: any[]) => T;
 type CanExportFunc = AnyFunc<Promise<any>> | AnyFunc<IterableIterator<any>>;
 type AutoInstanceType<T, U = T extends CanExportFunc ? T : T extends AnyFunc ? ReturnType<T> : T> = U extends AnyClass ? InstanceType<U> : U;
 import ExportActor = require('../../../app/service/actor');
-import ExportFavorite = require('../../../app/service/favorite');
+import ExportComments from '../../../app/service/comments';
+import ExportFavorite from '../../../app/service/favorite';
 import ExportFeed from '../../../app/service/feed';
-import ExportNews = require('../../../app/service/news');
-import ExportRedis = require('../../../app/service/redis');
+import ExportNews from '../../../app/service/news';
+import ExportRedis from '../../../app/service/redis';
 import ExportRemind = require('../../../app/service/remind');
 import ExportStar = require('../../../app/service/star');
 import ExportStory = require('../../../app/service/story');
@@ -20,6 +21,7 @@ import ExportUser from '../../../app/service/user';
 declare module 'egg' {
   interface IService {
     actor: AutoInstanceType<typeof ExportActor>;
+    comments: AutoInstanceType<typeof ExportComments>;
     favorite: AutoInstanceType<typeof ExportFavorite>;
     feed: AutoInstanceType<typeof ExportFeed>;
     news: AutoInstanceType<typeof ExportNews>;

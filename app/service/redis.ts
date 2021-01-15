@@ -1,8 +1,6 @@
-'use strict';
+import { Service } from 'egg';
 
-const Service = require('egg').Service;
-
-class Redis extends Service {
+export default class Redis extends Service {
   async set(key, value, seconds) {
     value = JSON.stringify(value);
     if (this.app.redis) {
@@ -22,5 +20,3 @@ class Redis extends Service {
     }
   }
 }
-
-module.exports = Redis;

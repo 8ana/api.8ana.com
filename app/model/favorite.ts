@@ -7,5 +7,15 @@ export default app => {
   const favoriteSchema = favorite(app);
   const Favorite = model.define('favorite', favoriteSchema);
 
+  Favorite.get = async (params, attributes = ['id', 'uid', 'aid']) => {
+    const condition = {
+      attributes,
+      where: {},
+    };
+    condition.where = params;
+    const result = await Favorite.findOne(condition);
+    return result;
+  };
+
   return Favorite;
 };
