@@ -11,8 +11,8 @@ export default class SubjectController extends Controller {
       format = ctx.helper.copy(data);
       const { mcid, actor, director, original, url, play, cid, content } = format;
       const typeList = await service.subject.typeList();
-      format.cid = typeList.filter(item => item.id === cid);
-      format.pid = typeList.filter(item => item.id === format.cid[0].pid);
+      format.cid = typeList.filter((item: any) => item.id === cid);
+      format.pid = typeList.filter((item: any) => item.id === format.cid[0].pid);
       format.content = content.replace(/<.*?>/g, '');
       if (mcid) {
         format.mcid = await service.subject.mcat({ cid: mcid.split(',') });
@@ -35,8 +35,8 @@ export default class SubjectController extends Controller {
         if (playlist.length) {
           const playArr = play.split('$$$');
           const urlArr = url.split('$$$');
-          playlist.forEach(({ display }, index) => {
-            if (display === 0) {
+          playlist.forEach((item: any, index) => {
+            if (item.display === 0) {
               playlist.splice(index, 1);
               playArr.splice(index, 1);
             }
@@ -47,7 +47,7 @@ export default class SubjectController extends Controller {
           const key = ctx.helper.md5(String(new Date().getTime()) + id + 'plain');
           playArr.forEach((item, index) => {
             const url = this.playlist_one(urlArr[index], key, item);
-            const info = playlist.filter(sitem => sitem.name === item)[0];
+            const info = playlist.filter((sitem: any) => sitem.name === item)[0] as any;
             const price = url[0].pic || 0;
             let i = 0;
             const obj = {
@@ -93,7 +93,7 @@ export default class SubjectController extends Controller {
     const { user } = ctx.state;
     const params = ctx.request.body;
     params.uid = user.id;
-    const result = await service.subject.add(params);
+    const result: any = await service.subject.add(params);
     if (result) {
       const { id, cid, uid } = result;
       const ip = this.ctx.request.ip;

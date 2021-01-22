@@ -18,6 +18,8 @@ export default (appInfo: EggAppInfo) => {
     password: 'root',
     database: 'database_development',
     timezone: '+08:00', // 由于orm用的UTC时间，这里必须加上东八区，否则取出来的时间相差8小时
+    delegate: 'model', // load all models to app.model and ctx.model
+    baseDir: 'model', // load models from `app/model/*.js`
     define: {
       timestamps: true, // 添加create,update,delete时间戳
       paranoid: true, // 添加软删除

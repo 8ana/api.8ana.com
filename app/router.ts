@@ -2,7 +2,7 @@ import { Application } from 'egg';
 /**
  * @param {Egg.Application} app - egg application
  */
-module.exports = (app: Application) => {
+export default (app: Application) => {
   const { router, controller, middleware, io } = app;
 
   const auth = middleware.auth;

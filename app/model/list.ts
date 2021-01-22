@@ -1,24 +1,26 @@
+import { Context } from 'egg';
+import { BaseModel, BaseModelStatic } from '../core/model';
 import list from '../schema/list';
 
-export default app => {
+export interface List extends BaseModel {}
+
+export default (app: Context) => {
   // 获取数据类型
   const { model } = app;
 
   const listSchema = list(app);
-  const List = model.define('list', listSchema, { timestamps: false });
+  const List = model.define('list', listSchema, { timestamps: false }) as BaseModelStatic<List>;
 
-  List.query = async params => {
-    const { orderBy = 'rank', order = 'DESC' } = params;
-    const rows = await List.findAll({
-      attributes: ['id', 'pid', 'name'],
-      where: {
-        status: 1,
-      },
-      order: [[orderBy, order]],
-    });
-
-    return rows;
+  return class extends List<List> {
+    static async query(params) {
+      const { orderBy = 'rank', order = 'DESC' } = params;
+      return await List.findAll({
+        attributes: ['id', 'pid', 'name'],
+        where: {
+          status: 1,
+        },
+        order: [[orderBy, order]],
+      });
+    }
   };
-
-  return List;
 };

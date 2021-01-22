@@ -10,6 +10,7 @@ import ExportActor = require('../../../app/service/actor');
 import ExportComments from '../../../app/service/comments';
 import ExportFavorite from '../../../app/service/favorite';
 import ExportFeed from '../../../app/service/feed';
+import ExportList from '../../../app/service/list';
 import ExportNews from '../../../app/service/news';
 import ExportRedis from '../../../app/service/redis';
 import ExportRemind = require('../../../app/service/remind');
@@ -24,6 +25,7 @@ declare module 'egg' {
     comments: AutoInstanceType<typeof ExportComments>;
     favorite: AutoInstanceType<typeof ExportFavorite>;
     feed: AutoInstanceType<typeof ExportFeed>;
+    list: AutoInstanceType<typeof ExportList>;
     news: AutoInstanceType<typeof ExportNews>;
     redis: AutoInstanceType<typeof ExportRedis>;
     remind: AutoInstanceType<typeof ExportRemind>;

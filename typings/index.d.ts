@@ -4,6 +4,10 @@ import { Socket, Server as SocketServer, Namespace as SocketNameSpace, Adapter }
 import 'egg-redis' // 导入 egg-redis 插件的智能提示
 import NspController from '../app/io/controller/nsp'
 
+export interface IWhere<T> {
+    where: T
+}
+
 declare module 'egg' {
     export interface Application {
         io: EggIOServer & EggSocketIO & EggSocketNameSpace;
