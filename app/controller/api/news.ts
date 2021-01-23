@@ -6,7 +6,7 @@ export default class News extends Controller {
     const { ctx } = this;
     const { params } = ctx;
 
-    const data = await this.service.news.get(params);
+    const data = await this.service.news.get({ params });
 
     if (data) {
       ctx.helper.success(ctx, { data });

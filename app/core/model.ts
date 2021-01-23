@@ -1,4 +1,4 @@
-import { Model, BuildOptions, DataTypes, ThroughOptions } from 'sequelize';
+import { Model, BuildOptions, DataTypes, ThroughOptions, Order } from 'sequelize';
 
 const { DATE, NOW, TINYINT, BIGINT } = DataTypes;
 
@@ -9,6 +9,24 @@ export interface BaseModel extends Model {
   readonly updated_at: Date;
   // 删除时间
   readonly deleted_at: Date;
+}
+
+export interface IOrder {
+  order?: Order;
+}
+export interface ICondition<T> extends IOrder {
+  where: T;
+  attributes?: Array<string>;
+  include?: Array<object>;
+  offset?: number;
+  limit?: number;
+}
+
+export interface IParams<T> extends IOrder {
+  attributes?: Array<string>;
+  pageSize?: number;
+  pageNo?: number;
+  filter?: T;
 }
 
 export type BaseModelStatic<T> = typeof Model & ThroughOptions & (new (values?: object, options?: BuildOptions) => T);

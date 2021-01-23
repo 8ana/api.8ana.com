@@ -2,15 +2,13 @@ import { Service } from 'egg';
 
 export default class News extends Service {
   async get(params) {
-    const news = await this.ctx.model.News.get(params);
-    return news;
+    return await this.ctx.model.News.get(params);
   }
 
   async list(params = {}) {
-    const news = await this.app.model.News.query({
+    return await this.app.model.News.query({
       ...params,
       attributes: ['id', 'name', 'pic', 'created_at'],
     });
-    return news;
   }
 }

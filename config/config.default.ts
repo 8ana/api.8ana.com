@@ -88,15 +88,14 @@ export default (appInfo: EggAppInfo) => {
   };
 
   // add your user config here
-  const userConfig = {
-    prefix: 'ff_',
-  };
+  const userConfig = {};
 
   config.customLoader = {
     utils: {
       directory: 'app/utils',
       inject: 'app',
       caseStyle: 'upper',
+      loadunit: true,
     },
   };
 

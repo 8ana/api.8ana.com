@@ -1,5 +1,5 @@
-import { Context } from 'egg';
-import { BaseModel, BaseModelStatic } from '../core/model';
+import { Context, Application } from 'egg';
+import { BaseModel, BaseModelStatic, ICondition, IParams } from '../core/model';
 import * as dayjs from 'dayjs';
 import subject from '../schema/subject';
 import mcat from '../schema/mcat';
@@ -8,66 +8,54 @@ import play from '../schema/play';
 export interface Subject extends BaseModel {}
 export interface Mcat extends BaseModel {}
 export interface Play extends BaseModel {}
-export interface Condition<T> {
-  where: {
-    id?: Array<string> | object | T;
-    letter?: Array<string>;
-    cid?: Array<string>;
-    status?: number;
-    name?: Array<string>;
-    area?: Array<string>;
-    language?: Array<string>;
-    year?: Array<string>;
-    prty?: number;
-    weekday?: number;
-    filmtime?: object;
-    stars?: number;
-    hits?: object;
-    gold?: object;
-    up?: object;
-    down?: object;
-    created_at?: object;
-  };
-  attributes?: Array<string>;
-  include?: Array<object>;
-  order?: Array<string>;
-  offset?: number;
-  limit?: number;
-}
 
-export interface Params {
-  attributes?: Array<string>;
-  pageSize?: number;
-  pageNo?: number;
-  filter?: {
-    wd?: string;
-    ids?: string;
-    id?: number;
-    not?: number;
-    letter?: string;
-    cid?: string;
-    status?: number;
-    name?: string;
-    area?: string;
-    language?: string;
-    year?: string;
-    prty?: number;
-    day?: number;
-    tag?: string;
-    mcid?: string;
-    weekday?: number;
-    filmtime?: string;
-    stars?: number;
-    hits?: string;
-    gold?: string;
-    up?: string;
-    down?: string;
-    created_at?: string;
-  };
-  order?: any;
-}
+type IWhere = {
+  id?: Array<string> | object;
+  letter?: Array<string>;
+  cid?: Array<string>;
+  status?: number;
+  name?: Array<string>;
+  area?: Array<string>;
+  language?: Array<string>;
+  year?: Array<string>;
+  prty?: number;
+  weekday?: number;
+  filmtime?: object;
+  stars?: number;
+  hits?: object;
+  gold?: object;
+  up?: object;
+  down?: object;
+  created_at?: object;
+};
 
-export default (app: Context) => {
+type IFilter = {
+  wd?: string;
+  ids?: string;
+  id?: number;
+  not?: number;
+  letter?: string;
+  cid?: string;
+  status?: number;
+  name?: string;
+  area?: string;
+  language?: string;
+  year?: string;
+  prty?: number;
+  day?: number;
+  tag?: string;
+  mcid?: string;
+  weekday?: number;
+  filmtime?: string;
+  stars?: number;
+  hits?: string;
+  gold?: string;
+  up?: string;
+  down?: string;
+  created_at?: string;
+};
+
+export default (app: Context & Application) => {
   // 获取数据类型
   const { Sequelize, model } = app;
   const { Op } = Sequelize;
@@ -146,10 +134,10 @@ export default (app: Context) => {
      * @param params {object} { attributes, pageSize, pageNo, filter } - 条件
      * @return {object|null} - 查找结果
      */
-    static async query(params: Params) {
+    static async query(params: IParams<IFilter>) {
       const { attributes, pageSize = 10, pageNo = 1, filter = {}, order = [['created_at', 'DESC']] } = params;
       const { wd, ids, not, letter, cid, name, area, language, year, filmtime, stars, hits, gold, up, down, created_at, day, prty, weekday, tag, mcid } = filter;
-      const condition: Condition<string> = {
+      const condition: ICondition<IWhere> = {
         attributes,
         order,
         include: [{ model: model.User, attributes: ['id', 'username', 'nickname', 'avatar'], as: 'user' }],

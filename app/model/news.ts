@@ -1,10 +1,14 @@
-import { Context } from 'egg';
-import { BaseModel, BaseModelStatic } from '../core/model';
+import { Context, Application } from 'egg';
+import { BaseModel, BaseModelStatic, ICondition, IParams } from '../core/model';
 import news from '../schema/news';
 
 export interface News extends BaseModel {}
 
-export default (app: Context) => {
+type IWhere = {
+  status?: number;
+};
+
+export default (app: Context & Application) => {
   // 获取数据类型
   const { Sequelize, model } = app;
   const { Op } = Sequelize;
@@ -13,10 +17,11 @@ export default (app: Context) => {
   const News = model.define('news', newsSchema) as BaseModelStatic<News>;
 
   return class extends News<News> {
-    static async query({ attributes, pageSize = 10, pageNo = 1, order = ['created_at', 'DESC'] }) {
-      const condition: any = {
+    static async query(params: IParams<{}>) {
+      const { attributes, pageSize = 10, pageNo = 1, order = [['created_at', 'DESC']] } = params;
+      const condition: ICondition<IWhere> = {
         attributes,
-        order: [order],
+        order,
         offset: pageSize * (pageNo - 1),
         limit: app.utils.Tool.toInt(pageSize),
         where: { status: 0 },
@@ -32,10 +37,10 @@ export default (app: Context) => {
         },
       };
     }
-    static async get(params, attributes = ['id', 'name', 'pic']) {
+    static async get({ params, attributes = ['id', 'name', 'pic'] }) {
       const condition = {
         attributes,
-        where: {},
+        where: { status: 0 },
       };
       if (params.not_id) {
         params.id = {
@@ -44,27 +49,23 @@ export default (app: Context) => {
         delete params.not_id;
       }
       condition.where = params;
-      const result = await News.findOne(condition);
-      return result;
+      return await News.findOne(condition);
     }
 
     // 添加
     static async add(params) {
-      const result = await News.create(params);
-      return result;
+      return await News.create(params);
     }
     // 更新
     static async edit(params) {
       const { id } = params;
-      const result = await News.update(params, { where: { id } });
-      console.log(result);
+      await News.update(params, { where: { id } });
       return id;
     }
 
     // 删除
     static async delete(params) {
-      const result = await News.destroy({ where: params });
-      return result;
+      return await News.destroy({ where: params });
     }
   };
 };

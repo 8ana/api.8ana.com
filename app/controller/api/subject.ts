@@ -127,6 +127,7 @@ export default class SubjectController extends Controller {
   // 分解单组播放地址链接
   private playlist_one(url, key, type) {
     const arr = url.replace(/\r\n|\n|\r/, '\r').split('\r');
+    const { encrypt } = this.app.utils.Tool;
     return arr.map((item, index) => {
       const i = index + 1;
       const list: any = {};
@@ -138,7 +139,7 @@ export default class SubjectController extends Controller {
         }
         const [name = '', path = '', pic = '', fen = '', miao = '', source = ''] = urlArr;
         list.name = name.trim();
-        list.path = this.app.utils.Tool.encrypt(path.trim(), key);
+        list.path = encrypt(path.trim(), key);
         // list.path2 = app.utils.Tool.decrypt(list.path, key);
         if (pic) list.pic = pic.trim();
         if (fen) list.fen = fen.trim();
@@ -147,10 +148,10 @@ export default class SubjectController extends Controller {
       } else {
         if (type === 'quote') {
           list.name = '';
-          list.path = this.app.utils.Tool.encrypt(item.trim(), key);
+          list.path = encrypt(item.trim(), key);
         } else {
           list.name = `第${index}集`;
-          list.path = this.app.utils.Tool.encrypt(item.trim(), key);
+          list.path = encrypt(item.trim(), key);
         }
       }
       return list;
