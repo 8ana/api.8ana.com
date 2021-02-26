@@ -49,6 +49,10 @@ export default (app: Context) => {
       return result;
     }
 
+    static async find(params) {
+      return await User.findOne(params);
+    }
+
     // 添加
     static async add(params) {
       const result = await User.create(params);

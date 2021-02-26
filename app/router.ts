@@ -14,8 +14,9 @@ export default (app: Application) => {
   router.get('/api/user/list', controller.api.user.list);
   router.get('/api/user/info', auth(0), controller.api.user.userInfo);
   router.post('/api/user/logout', controller.api.user.logout);
-  router.get('/api/user/:id', controller.api.user.get);
   router.delete('/api/user/delete', auth(0), controller.api.user.delete);
+  router.get('/api/user/init', controller.api.user.exist);
+  router.get('/api/user/:id', controller.api.user.get);
   // 收藏
   router.get('/api/favorite/:id', controller.api.favorite.get);
   // 剧集

@@ -13,6 +13,10 @@ export default class User extends Service {
     return await this.app.model.User.get(params, ['id', 'admin', 'password', 'username', 'avatar', 'status', 'salt', 'email']);
   }
 
+  async exist(params = {}) {
+    return await this.app.model.User.find(params);
+  }
+
   async list(params = {}) {
     const user = await this.app.model.User.query({
       ...params,

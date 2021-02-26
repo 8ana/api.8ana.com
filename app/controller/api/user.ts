@@ -25,7 +25,7 @@ export default class UserController extends Controller {
     // 校验参数
     ctx.validate(this.UserLoginTransfer);
     const { username, password } = ctx.request.body;
-    const user = await service.user.findUser({ username });
+    const user: any = await service.user.findUser({ username });
 
     if (!user) {
       helper.fail(ctx, { message: '用户名错误' });
@@ -33,7 +33,7 @@ export default class UserController extends Controller {
       helper.fail(ctx, { message: '用户未审核' });
     } else {
       const { id, username, avatar, salt, admin } = user;
-      const pwd = helper.md5(helper.md5(password) + salt);
+      const pwd = helper.md5(password + salt);
       if (pwd === user.password) {
         // 生成Token令牌
         const token = app.jwt.sign(
@@ -48,7 +48,7 @@ export default class UserController extends Controller {
         );
         try {
           await app.redis.set(`token_${user.id}`, token);
-          helper.success(ctx, { data: token });
+          helper.success(ctx, { data: { token, refreshToken: token } });
         } catch (e) {
           console.error(e);
           helper.fail(ctx, {});
@@ -82,6 +82,12 @@ export default class UserController extends Controller {
     }
   }
 
+  async exist() {
+    const { ctx } = this;
+    const user: any = await this.service.user.exist({});
+    ctx.helper.success(ctx, { data: user ? user.id : 'init' });
+  }
+
   async list() {
     const { ctx, service } = this;
     const result = await service.user.list(ctx.request.query);
@@ -94,7 +100,7 @@ export default class UserController extends Controller {
     const params = ctx.request.body;
     // 校验参数
     ctx.validate(UserAdd);
-    const { username, email, captcha } = params;
+    const { username, email, captcha, isAdmin } = params;
     if (captcha) {
       const getCaptcha = ctx.cookies.get('captcha', { encrypt: true });
       if (!(captcha === getCaptcha)) {
@@ -103,14 +109,14 @@ export default class UserController extends Controller {
       }
     }
     if (username) {
-      const user = await service.user.findUser({ username });
+      const user: any = await service.user.findUser({ username });
       if (user && user.username === username) {
         ctx.helper.fail(ctx, { message: '用户名重复' });
         return;
       }
     }
     if (email) {
-      const user = await service.user.findUser({ email });
+      const user: any = await service.user.findUser({ email });
       if (user && user.email === email) {
         ctx.helper.fail(ctx, { message: '邮箱已被使用' });
         return;
@@ -118,7 +124,11 @@ export default class UserController extends Controller {
     }
     const ip = ctx.request.ip;
     const rand = ctx.helper.randomString(6);
-    params.password = ctx.helper.md5(ctx.helper.md5(params.password) + rand);
+    params.password = ctx.helper.md5(params.password + rand);
+    const user = await service.user.exist();
+    if (isAdmin && !user) {
+      params.admin = 100;
+    }
     const result = await service.user.add({ ...params, salt: rand, reg_ip: app.utils.Tool.ip2long(ip), last_login_ip: app.utils.Tool.ip2long(ip) });
     ctx.helper.success(ctx, { data: result });
   }
@@ -138,7 +148,7 @@ export default class UserController extends Controller {
       params.password = ctx.helper.md5(ctx.helper.md5(params.password) + rand);
     }
     if (email) {
-      const user = await service.user.findUser({ email, not_id: id });
+      const user: any = await service.user.findUser({ email, not_id: id });
       if (user.email === email) {
         ctx.helper.fail(ctx, { message: '邮箱已被使用' });
         return;

@@ -22,5 +22,18 @@ export default (app: Context) => {
         order: [[orderBy, order]],
       });
     }
+
+    static async add(params) {
+      return await List.create(params);
+    }
+
+    static async edit(params) {
+      const { id } = params;
+      return await List.update(params, { where: { id } });
+    }
+
+    static async delete(params) {
+      return await List.destroy({ where: params });
+    }
   };
 };
