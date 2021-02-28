@@ -28,7 +28,7 @@ export default class Subject extends Service {
         'area',
         'language',
         'year',
-        'continu',
+        'serialized',
         'total',
         'up',
         'down',

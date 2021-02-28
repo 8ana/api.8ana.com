@@ -42,7 +42,7 @@ module.exports = {
       other: { type: TEXT, defaultValue: '', allowNull: false, comment: '其他项' },
       prty: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '推荐级别' },
       year: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '年份' },
-      continu: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '连载' },
+      serialized: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '连载' },
       total: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '总集数' },
       isend: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '是否完结' },
       stars: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '星级' },
@@ -53,7 +53,7 @@ module.exports = {
       weekday: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '星期' },
       douban: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '豆瓣id' },
       imdb: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: 'IMDB' },
-      is_broadcast: { type: TINYINT.UNSIGNED, defaultValue: 1, comment: '是否开播0:未放送1:已放送' },
+      broadcast: { type: TINYINT.UNSIGNED, defaultValue: 1, comment: '是否开播0:未放送1:已放送' },
       status: { type: INTEGER.UNSIGNED, allowNull: true, defaultValue: 0, comment: '状态：0正常 1禁用 2审核中 3审核拒绝 4审核忽略 -1删除' },
       hits: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '总' },
       hits_day: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '日' },
@@ -62,7 +62,7 @@ module.exports = {
       hits_lasttime: { type: DATE, allowNull: false, defaultValue: NOW, comment: '热度更新时间' },
       created_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '创建时间' },
       updated_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '更新时间' },
-      deleted_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '删除时间' },
+      deleted_at: { type: DATE, comment: '删除时间' },
     });
   },
 

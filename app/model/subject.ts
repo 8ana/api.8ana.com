@@ -62,7 +62,7 @@ export default (app: Context & Application) => {
   const subjectSchema = subject(app);
   const mcatSchema = mcat(app);
   const playSchema = play(app);
-  const Subject = model.define('subject', subjectSchema) as BaseModelStatic<Subject>;
+  const Subject = model.define('subject', subjectSchema, { timestamps: false }) as BaseModelStatic<Subject>;
   const Mcat = model.define('mcat', mcatSchema, { timestamps: false }) as BaseModelStatic<Mcat>;
   const Play = model.define('play', playSchema, { timestamps: false }) as BaseModelStatic<Play>;
 
@@ -72,6 +72,16 @@ export default (app: Context & Application) => {
       const result = await Subject.create(params);
       return result;
     }
+    // 添加多条
+    static async adds(params) {
+      const result = await Subject.bulkCreate(params);
+      return result;
+    }
+
+    static async addsMcat(params) {
+      return await Mcat.bulkCreate(params);
+    }
+
     // 更新
     static async edit(params) {
       const { id } = params;

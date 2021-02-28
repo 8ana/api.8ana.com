@@ -28,5 +28,9 @@ export default (app: Context) => {
         await Mcid.bulkCreate(data);
       }
     }
+
+    static async adds(params) {
+      return await Mcid.bulkCreate(params);
+    }
   };
 };

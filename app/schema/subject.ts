@@ -43,7 +43,7 @@ export default app => {
     other: { type: TEXT, defaultValue: '', allowNull: false, comment: '其他项' },
     prty: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '推荐级别' },
     year: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '年份' },
-    continu: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '连载' },
+    serialized: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '连载' },
     total: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '总集数' },
     isend: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '是否完结' },
     stars: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '星级' },
@@ -51,7 +51,7 @@ export default app => {
     down: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '踩' },
     rank: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '播放源排序' },
     gold: { type: DECIMAL(3, 1), defaultValue: 0.0, comment: '评分' },
-    isfilm: { type: TINYINT.UNSIGNED, defaultValue: 1, comment: '是否开播0:未放送1:已放送' },
+    broadcast: { type: TINYINT.UNSIGNED, defaultValue: 1, comment: '是否开播0:未放送1:已放送' },
     weekday: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '星期' },
     douban: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '豆瓣id' },
     imdb: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: 'IMDB' },
@@ -61,5 +61,8 @@ export default app => {
     hits_week: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '周' },
     hits_month: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '月' },
     hits_lasttime: { type: DATE, allowNull: false, defaultValue: NOW, comment: '热度更新时间' },
+    created_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '创建时间' },
+    updated_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '更新时间' },
+    deleted_at: { type: DATE, comment: '删除时间' },
   };
 };

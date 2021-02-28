@@ -21,5 +21,13 @@ export default (app: Context) => {
       const result = await Favorite.findOne(condition);
       return result;
     }
+
+    static async add(params) {
+      return await Favorite.create(params);
+    }
+
+    static async adds(params) {
+      return await Favorite.bulkCreate(params);
+    }
   };
 };

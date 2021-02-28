@@ -49,6 +49,12 @@ export default (app: Application) => {
   // 服务端渲染
   router.get('/news', controller.news.list);
 
+  // 重写数据
+  router.get('/api/re/list', controller.api.re.list);
+  router.get('/api/re/mcat', controller.api.re.mcat);
+  router.get('/api/re/mcid', controller.api.re.mcid);
+  router.get('/api/re/gold', controller.api.re.gold);
+
   // socket.io
   io.of('/io').route('exchange', io.controller.nsp.exchange);
 };

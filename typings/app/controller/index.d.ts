@@ -11,6 +11,7 @@ import ExportApiFavorite from '../../../app/controller/api/favorite';
 import ExportApiFeed from '../../../app/controller/api/feed';
 import ExportApiList from '../../../app/controller/api/list';
 import ExportApiNews from '../../../app/controller/api/news';
+import ExportApiRe from '../../../app/controller/api/re';
 import ExportApiRemind = require('../../../app/controller/api/remind');
 import ExportApiStory = require('../../../app/controller/api/story');
 import ExportApiSubject from '../../../app/controller/api/subject';
@@ -28,6 +29,7 @@ declare module 'egg' {
       feed: ExportApiFeed;
       list: ExportApiList;
       news: ExportApiNews;
+      re: ExportApiRe;
       remind: ExportApiRemind;
       story: ExportApiStory;
       subject: ExportApiSubject;

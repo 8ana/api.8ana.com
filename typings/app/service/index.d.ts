@@ -12,6 +12,7 @@ import ExportFavorite from '../../../app/service/favorite';
 import ExportFeed from '../../../app/service/feed';
 import ExportList from '../../../app/service/list';
 import ExportNews from '../../../app/service/news';
+import ExportRe from '../../../app/service/re';
 import ExportRedis from '../../../app/service/redis';
 import ExportRemind = require('../../../app/service/remind');
 import ExportStar = require('../../../app/service/star');
@@ -27,6 +28,7 @@ declare module 'egg' {
     feed: AutoInstanceType<typeof ExportFeed>;
     list: AutoInstanceType<typeof ExportList>;
     news: AutoInstanceType<typeof ExportNews>;
+    re: AutoInstanceType<typeof ExportRe>;
     redis: AutoInstanceType<typeof ExportRedis>;
     remind: AutoInstanceType<typeof ExportRemind>;
     star: AutoInstanceType<typeof ExportStar>;
