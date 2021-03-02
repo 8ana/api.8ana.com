@@ -59,8 +59,8 @@ export default (app: Context & Application) => {
   const { Op } = Sequelize;
   const subjectSchema = subject(app);
   const playSchema = play(app);
-  const Subject = model.define('subject', subjectSchema, { timestamps: false }) as BaseModelStatic<Subject>;
-  const Play = model.define('play', playSchema, { timestamps: false }) as BaseModelStatic<Play>;
+  const Subject = model.define('subject', subjectSchema) as BaseModelStatic<Subject>;
+  const Play = model.define('play', playSchema) as BaseModelStatic<Play>;
 
   return class extends Subject<Subject> {
     // 添加
@@ -323,6 +323,7 @@ export default (app: Context & Application) => {
     static async get({ id, attributes }) {
       const condition: any = {
         attributes,
+        where: { id, status: 0 },
         include: [
           {
             model: model.User,
@@ -394,7 +395,6 @@ export default (app: Context & Application) => {
             },
           },
         ],
-        where: { id, status: 0 },
       };
       return await Subject.findOne(condition);
     }

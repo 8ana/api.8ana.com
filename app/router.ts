@@ -22,7 +22,7 @@ export default (app: Application) => {
   // 剧集
   router.get('/api/subject/list', controller.api.subject.list);
   router.post('/api/subject/add', auth(0), controller.api.subject.add);
-  router.put('/api/subject/edit', auth(0), controller.api.subject.edit);
+  router.put('/api/subject/edit', auth(0), controller.api.subject.add);
   router.delete('/api/subject/delete', auth(0), controller.api.subject.delete);
   router.get('/api/subject/:id', controller.api.subject.get);
   // 新闻
@@ -35,14 +35,14 @@ export default (app: Application) => {
   router.delete('/api/feed/delete', auth(0), controller.api.feed.delete);
   router.get('/api/feed/:id', controller.api.feed.get);
   // 订阅
-  router.get('/api/remind/list', controller.api.remind.list);
-  router.get('/api/remind/:id', controller.api.remind.get);
-  // 演员
-  router.get('/api/actor/list', controller.api.actor.list);
-  router.get('/api/actor/:id', controller.api.actor.get);
-  // 剧情
-  router.get('/api/story/list', controller.api.story.list);
-  router.get('/api/story/:id', controller.api.story.get);
+  // router.get('/api/remind/list', controller.api.remind.list);
+  // router.get('/api/remind/:id', controller.api.remind.get);
+  // // 演员
+  // router.get('/api/actor/list', controller.api.actor.list);
+  // router.get('/api/actor/:id', controller.api.actor.get);
+  // // 剧情
+  // router.get('/api/story/list', controller.api.story.list);
+  // router.get('/api/story/:id', controller.api.story.get);
   // 验证码
   router.get('/api/captcha/get', controller.api.captcha.get);
   router.get('/api/captcha/exp', controller.api.captcha.exp);

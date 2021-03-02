@@ -21,7 +21,7 @@ export default (appInfo: EggAppInfo) => {
     delegate: 'model', // load all models to app.model and ctx.model
     baseDir: 'model', // load models from `app/model/*.js`
     define: {
-      timestamps: true, // 添加create,update,delete时间戳
+      timestamps: false, // 添加create,update,delete时间戳
       paranoid: true, // 添加软删除
       freezeTableName: true, // 防止修改表名为复数
       underscored: true, // 防止驼峰式字段被默认转为下划线

@@ -9,7 +9,7 @@ export default class SubjectController extends Controller {
     let format: any = {};
     if (data) {
       format = ctx.helper.copy(data);
-      const { mcid, actor, director, original, url, play, cid, content } = format;
+      const { mcid, /* actor, director, original, */ url, play, cid, content } = format;
       const typeList = await service.subject.typeList();
       format.cid = typeList.filter((item: any) => item.id === cid);
       format.pid = typeList.filter((item: any) => item.id === format.cid[0].pid);
@@ -18,17 +18,17 @@ export default class SubjectController extends Controller {
         format.mcid = await service.mcat.get({ cid: mcid.split(',') });
       }
 
-      if (actor) {
-        format.actor = await ctx.getSatr(actor.split(','), service);
-      }
+      // if (actor) {
+      //   format.actor = await ctx.getSatr(actor.split(','), service);
+      // }
 
-      if (director) {
-        format.director = await ctx.getSatr(director.split(','), service);
-      }
+      // if (director) {
+      //   format.director = await ctx.getSatr(director.split(','), service);
+      // }
 
-      if (original) {
-        format.original = await ctx.getSatr(original.split(','), service);
-      }
+      // if (original) {
+      //   format.original = await ctx.getSatr(original.split(','), service);
+      // }
 
       if (url) {
         const playlist = await service.subject.play();
@@ -97,7 +97,7 @@ export default class SubjectController extends Controller {
     if (id) {
       const res = await service.subject.get(id);
       if (!res) {
-        ctx.helper.fail(ctx, { data: 0, message: '没有找到相关内容或内容没有更新' });
+        ctx.helper.fail(ctx, { data: 0, message: '没有找到相关内容' });
         return;
       }
     }
@@ -111,32 +111,16 @@ export default class SubjectController extends Controller {
     }
     const result: any = await service.subject[id ? 'edit' : 'add'](params);
     if (result) {
-      const { id, cid, uid } = result;
-      await service.feed.add({ ip, sid: 1, cid, uid, type: id ? 5 : 4, aid: id });
-      ctx.helper.success(ctx, { data: result, message: id ? '更新成功' : '添加成功' });
+      if (id) {
+        const { id: aid, cid, uid } = params;
+        await service.feed.add({ ip, sid: 1, cid, uid, type: 5, aid });
+      } else {
+        const { id: aid, cid, uid } = result;
+        await service.feed.add({ ip, sid: 1, cid, uid, type: 4, aid });
+      }
+      ctx.helper.success(ctx, { data: id ? id : result, message: id ? '更新成功' : '添加成功' });
     } else {
       ctx.helper.fail(ctx, { data: 0, message: id ? '更新失败' : '添加失败' });
-    }
-  }
-
-  async edit() {
-    const { ctx, service } = this;
-    const { user } = ctx.state;
-    const ip = ctx.request.ip;
-    const params = ctx.request.body;
-    params.uid = user.id;
-    params.ip = ip;
-    if (!params.letter) {
-      params.letter = ctx.helper.h2p(params.name).substring(0, 1).toUpperCase();
-    }
-    if (!params.letters) {
-      params.letters = ctx.helper.h2p(params.name);
-    }
-    const result = await service.subject.edit(params);
-    if (result[0]) {
-      ctx.helper.success(ctx, { data: 1, message: '更新成功' });
-    } else {
-      ctx.helper.fail(ctx, { data: 0, message: '没有找到相关内容或内容没有更新' });
     }
   }
 
@@ -166,7 +150,7 @@ export default class SubjectController extends Controller {
         const [name = '', path = '', pic = '', fen = '', miao = '', source = ''] = urlArr;
         list.name = name.trim();
         list.path = encrypt(path.trim(), key);
-        // list.path2 = app.utils.Tool.decrypt(list.path, key);
+        // list.path2 = decrypt(list.path, key);
         if (pic) list.pic = pic.trim();
         if (fen) list.fen = fen.trim();
         if (miao) list.miao = miao.trim();
