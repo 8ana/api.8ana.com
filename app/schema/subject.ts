@@ -55,6 +55,7 @@ export default app => {
     weekday: { type: TINYINT.UNSIGNED, defaultValue: 0, comment: '星期' },
     douban: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: '豆瓣id' },
     imdb: { type: INTEGER.UNSIGNED, defaultValue: 0, comment: 'IMDB' },
+    ip: { type: INTEGER.UNSIGNED, allowNull: false, defaultValue: 0, comment: 'IP' },
     status: { type: INTEGER.UNSIGNED, allowNull: true, defaultValue: 0, comment: '状态：0正常 1禁用 2审核中 3审核拒绝 4审核忽略 -1删除' },
     hits: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '总' },
     hits_day: { type: BIGINT.UNSIGNED, allowNull: true, defaultValue: 0, comment: '日' },

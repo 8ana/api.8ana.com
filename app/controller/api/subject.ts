@@ -15,7 +15,7 @@ export default class SubjectController extends Controller {
       format.pid = typeList.filter((item: any) => item.id === format.cid[0].pid);
       format.content = content.replace(/<.*?>/g, '');
       if (mcid) {
-        format.mcid = await service.subject.mcat({ cid: mcid.split(',') });
+        format.mcid = await service.mcat.get({ cid: mcid.split(',') });
       }
 
       if (actor) {
@@ -91,22 +91,48 @@ export default class SubjectController extends Controller {
   async add() {
     const { ctx, service } = this;
     const { user } = ctx.state;
+    const ip = ctx.request.ip;
     const params = ctx.request.body;
+    const { id, letter, letters } = params;
+    if (id) {
+      const res = await service.subject.get(id);
+      if (!res) {
+        ctx.helper.fail(ctx, { data: 0, message: '没有找到相关内容或内容没有更新' });
+        return;
+      }
+    }
     params.uid = user.id;
-    const result: any = await service.subject.add(params);
+    params.ip = ip;
+    if (!letter) {
+      params.letter = ctx.helper.h2p(params.name).substring(0, 1).toUpperCase();
+    }
+    if (!letters) {
+      params.letters = ctx.helper.h2p(params.name);
+    }
+    const result: any = await service.subject[id ? 'edit' : 'add'](params);
     if (result) {
       const { id, cid, uid } = result;
-      const ip = this.ctx.request.ip;
-      await service.feed.add({ ip, sid: 1, cid, uid, type: 4, aid: id });
-      ctx.helper.success(ctx, { data: result, message: '添加成功' });
+      await service.feed.add({ ip, sid: 1, cid, uid, type: id ? 5 : 4, aid: id });
+      ctx.helper.success(ctx, { data: result, message: id ? '更新成功' : '添加成功' });
     } else {
-      ctx.helper.fail(ctx, { data: 0, message: '添加失败' });
+      ctx.helper.fail(ctx, { data: 0, message: id ? '更新失败' : '添加失败' });
     }
   }
 
   async edit() {
     const { ctx, service } = this;
-    const result = await service.subject.edit(ctx.request.body);
+    const { user } = ctx.state;
+    const ip = ctx.request.ip;
+    const params = ctx.request.body;
+    params.uid = user.id;
+    params.ip = ip;
+    if (!params.letter) {
+      params.letter = ctx.helper.h2p(params.name).substring(0, 1).toUpperCase();
+    }
+    if (!params.letters) {
+      params.letters = ctx.helper.h2p(params.name);
+    }
+    const result = await service.subject.edit(params);
     if (result[0]) {
       ctx.helper.success(ctx, { data: 1, message: '更新成功' });
     } else {

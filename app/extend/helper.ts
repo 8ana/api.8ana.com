@@ -1,4 +1,5 @@
 import crypto = require('crypto');
+import pinyin = require('pinyin');
 import { Context } from 'egg';
 
 export interface IFail {
@@ -50,12 +51,19 @@ export default {
       },
     };
   },
-
   md5(data) {
     return crypto.createHash('md5').update(data).digest('hex');
   },
   copy(data) {
     return JSON.parse(JSON.stringify(data));
+  },
+  // 汉字转拼音
+  h2p(data) {
+    return pinyin(data, {
+      style: pinyin.STYLE_NORMAL, // 设置拼音风格
+    })
+      .join('')
+      .toLowerCase();
   },
   randomString(len) {
     len = len || 32;

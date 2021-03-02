@@ -9,6 +9,7 @@ import ExportFeed from '../../../app/model/feed';
 import ExportFollow from '../../../app/model/follow';
 import ExportGold from '../../../app/model/gold';
 import ExportList from '../../../app/model/list';
+import ExportMcat from '../../../app/model/mcat';
 import ExportMcid from '../../../app/model/mcid';
 import ExportNews from '../../../app/model/news';
 import ExportOmcat from '../../../app/model/omcat';
@@ -29,6 +30,7 @@ declare module 'egg' {
     Follow: ReturnType<typeof ExportFollow>;
     Gold: ReturnType<typeof ExportGold>;
     List: ReturnType<typeof ExportList>;
+    Mcat: ReturnType<typeof ExportMcat>;
     Mcid: ReturnType<typeof ExportMcid>;
     News: ReturnType<typeof ExportNews>;
     Omcat: ReturnType<typeof ExportOmcat>;

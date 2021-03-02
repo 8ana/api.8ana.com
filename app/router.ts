@@ -46,6 +46,18 @@ export default (app: Application) => {
   // 验证码
   router.get('/api/captcha/get', controller.api.captcha.get);
   router.get('/api/captcha/exp', controller.api.captcha.exp);
+  // 大分类
+  router.get('/api/list/list', controller.api.list.list);
+  router.post('/api/list/add', auth(0), controller.api.list.add);
+  router.post('/api/list/edit', auth(0), controller.api.list.edit);
+  router.delete('/api/list/delete', auth(0), controller.api.list.delete);
+  router.get('/api/list/:id', controller.api.list.get);
+  // 小分类
+  router.get('/api/mcat/list', controller.api.mcat.list);
+  router.post('/api/mcat/add', auth(0), controller.api.mcat.add);
+  router.post('/api/mcat/edit', auth(0), controller.api.mcat.edit);
+  router.delete('/api/mcat/delete', auth(0), controller.api.mcat.delete);
+  router.get('/api/mcat/:id', controller.api.mcat.get);
   // 服务端渲染
   router.get('/news', controller.news.list);
 

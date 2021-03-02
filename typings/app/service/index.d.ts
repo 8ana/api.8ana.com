@@ -11,6 +11,7 @@ import ExportComments from '../../../app/service/comments';
 import ExportFavorite from '../../../app/service/favorite';
 import ExportFeed from '../../../app/service/feed';
 import ExportList from '../../../app/service/list';
+import ExportMcat from '../../../app/service/mcat';
 import ExportNews from '../../../app/service/news';
 import ExportRe from '../../../app/service/re';
 import ExportRedis from '../../../app/service/redis';
@@ -27,6 +28,7 @@ declare module 'egg' {
     favorite: AutoInstanceType<typeof ExportFavorite>;
     feed: AutoInstanceType<typeof ExportFeed>;
     list: AutoInstanceType<typeof ExportList>;
+    mcat: AutoInstanceType<typeof ExportMcat>;
     news: AutoInstanceType<typeof ExportNews>;
     re: AutoInstanceType<typeof ExportRe>;
     redis: AutoInstanceType<typeof ExportRedis>;

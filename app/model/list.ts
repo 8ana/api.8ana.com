@@ -13,14 +13,18 @@ export default (app: Context) => {
 
   return class extends List<List> {
     static async query(params) {
-      const { orderBy = 'rank', order = 'DESC' } = params;
+      const { orderBy = 'rank', order = 'ASC' } = params;
       return await List.findAll({
         attributes: ['id', 'pid', 'name'],
         where: {
-          status: 1,
+          status: 0,
         },
         order: [[orderBy, order]],
       });
+    }
+
+    static async get(params) {
+      return await List.findOne(params);
     }
 
     static async add(params) {

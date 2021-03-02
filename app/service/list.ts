@@ -5,6 +5,10 @@ export default class List extends Service {
     return await this.app.model.List.query(params);
   }
 
+  async get(params) {
+    return await this.app.model.List.get(params);
+  }
+
   async add(params = {}) {
     return await this.app.model.List.add(params);
   }

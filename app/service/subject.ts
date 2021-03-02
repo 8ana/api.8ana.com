@@ -71,10 +71,6 @@ export default class Subject extends Service {
     return await this.app.model.Subject.delete(params);
   }
 
-  public async mcat(params = {}) {
-    return await this.app.model.Subject.mcat(params);
-  }
-
   async typeList(params = {}) {
     const { app } = this;
     const typeList = await app.model.List.query(params);

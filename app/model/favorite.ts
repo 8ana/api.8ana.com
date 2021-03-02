@@ -26,6 +26,14 @@ export default (app: Context) => {
       return await Favorite.create(params);
     }
 
+    static async edit(params) {
+      return await Favorite.update(params, { where: { id: params.id } });
+    }
+
+    static async delete(params) {
+      return await Favorite.destroy({ where: { id: params.id } });
+    }
+
     static async adds(params) {
       return await Favorite.bulkCreate(params);
     }

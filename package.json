@@ -23,6 +23,7 @@
     "koa-jwt2": "^1.0.3",
     "lodash": "^4.17.21",
     "mysql2": "^2.2.5",
+    "pinyin": "^2.9.1",
     "svg-captcha": "^1.4.0"
   },
   "devDependencies": {

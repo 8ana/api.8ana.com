@@ -1,16 +1,15 @@
 import { Controller } from 'egg';
 
-export default class List extends Controller {
-  async list() {
+export default class Mcat extends Controller {
+  public async list() {
     const { ctx, service } = this;
-    const result = await service.list.list(ctx.request.query);
-
+    const result = await service.mcat.list(ctx.request.query);
     ctx.helper.success(ctx, { data: result });
   }
 
   public async get() {
     const { ctx, service } = this;
-    const result = await service.list.get(ctx.request.query);
+    const result = await service.mcat.get(ctx.request.query);
 
     ctx.helper.success(ctx, { data: result });
   }
@@ -18,28 +17,26 @@ export default class List extends Controller {
   async add() {
     const { ctx, service } = this;
     const params = ctx.request.body;
-    if (!params.dir) {
-      params.dir = ctx.helper.h2p(params.name);
+    if (!params.title) {
+      params.title = ctx.helper.h2p(params.name);
     }
-    const result = await service.list.add(params);
-
+    const result = await service.mcat.add(params);
     ctx.helper.success(ctx, { data: result });
   }
 
   async edit() {
     const { ctx, service } = this;
     const params = ctx.request.body;
-    if (!params.dir) {
-      params.dir = ctx.helper.h2p(params.name);
+    if (!params.title) {
+      params.title = ctx.helper.h2p(params.name);
     }
-    const result = await service.list.edit(params);
-
+    const result = await service.mcat.edit(params);
     ctx.helper.success(ctx, { data: result });
   }
 
   async delete() {
     const { ctx, service } = this;
-    const result = await service.list.delete(ctx.request.query);
+    const result = await service.mcat.delete(ctx.request.query);
 
     ctx.helper.success(ctx, { data: result });
   }

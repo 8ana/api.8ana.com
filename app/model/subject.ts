@@ -2,11 +2,9 @@ import { Context, Application } from 'egg';
 import { BaseModel, BaseModelStatic, ICondition, IParams } from '../core/model';
 import * as dayjs from 'dayjs';
 import subject from '../schema/subject';
-import mcat from '../schema/mcat';
 import play from '../schema/play';
 
 export interface Subject extends BaseModel {}
-export interface Mcat extends BaseModel {}
 export interface Play extends BaseModel {}
 
 type IWhere = {
@@ -60,10 +58,8 @@ export default (app: Context & Application) => {
   const { Sequelize, model } = app;
   const { Op } = Sequelize;
   const subjectSchema = subject(app);
-  const mcatSchema = mcat(app);
   const playSchema = play(app);
   const Subject = model.define('subject', subjectSchema, { timestamps: false }) as BaseModelStatic<Subject>;
-  const Mcat = model.define('mcat', mcatSchema, { timestamps: false }) as BaseModelStatic<Mcat>;
   const Play = model.define('play', playSchema, { timestamps: false }) as BaseModelStatic<Play>;
 
   return class extends Subject<Subject> {
@@ -76,10 +72,6 @@ export default (app: Context & Application) => {
     static async adds(params) {
       const result = await Subject.bulkCreate(params);
       return result;
-    }
-
-    static async addsMcat(params) {
-      return await Mcat.bulkCreate(params);
     }
 
     // 更新
@@ -119,19 +111,6 @@ export default (app: Context & Application) => {
         where: {
           status: 1,
           display: 1,
-        },
-        order: [[orderBy, order]],
-      });
-
-      return rows;
-    }
-
-    static async mcat(params) {
-      const { orderBy = 'rank', order = 'DESC', cid = '' } = params;
-      const rows = await Mcat.findAll({
-        attributes: ['cid', 'name'],
-        where: {
-          cid,
         },
         order: [[orderBy, order]],
       });

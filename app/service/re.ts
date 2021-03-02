@@ -14,7 +14,7 @@ export default class Re extends Service {
   }
 
   public async addsMcat(params = {}) {
-    return await this.app.model.Subject.addsMcat(params);
+    return await this.app.model.Mcat.addsMcat(params);
   }
 
   public async addsMcid(params = {}) {
