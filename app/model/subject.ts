@@ -27,31 +27,31 @@ type IWhere = {
   created_at?: object;
 };
 
-type IFilter = {
-  wd?: string;
-  ids?: string;
-  id?: number;
-  not?: number;
-  letter?: string;
-  cid?: string;
-  status?: number;
-  name?: string;
-  area?: string;
-  language?: string;
-  year?: string;
-  prty?: number;
-  day?: number;
-  tag?: string;
-  mcid?: string;
-  weekday?: number;
-  filmtime?: string;
-  stars?: number;
-  hits?: string;
-  gold?: string;
-  up?: string;
-  down?: string;
-  created_at?: string;
-};
+// type IFilter = {
+//   wd?: string;
+//   ids?: string;
+//   id?: number;
+//   not?: number;
+//   letter?: string;
+//   cid?: string;
+//   status?: number;
+//   name?: string;
+//   area?: string;
+//   language?: string;
+//   year?: string;
+//   prty?: number;
+//   day?: number;
+//   tag?: string;
+//   mcid?: string;
+//   weekday?: number;
+//   filmtime?: string;
+//   stars?: number;
+//   hits?: string;
+//   gold?: string;
+//   up?: string;
+//   down?: string;
+//   created_at?: string;
+// };
 
 export default (app: Context & Application) => {
   // 获取数据类型
@@ -123,9 +123,9 @@ export default (app: Context & Application) => {
      * @param params {object} { attributes, pageSize, pageNo, filter } - 条件
      * @return {object|null} - 查找结果
      */
-    static async query(params: IParams<IFilter>) {
-      const { attributes, pageSize = 10, pageNo = 1, filter = {}, order = [['created_at', 'DESC']] } = params;
-      const { wd, ids, not, letter, cid, name, area, language, year, filmtime, stars, hits, gold, up, down, created_at, day, prty, weekday, tag, mcid } = filter;
+    static async query(params: IParams<string>) {
+      const { attributes, pageSize = 10, pageNo = 1, filter = '{}', order = [['created_at', 'DESC']] } = params;
+      const { wd, ids, not, letter, cid, name, area, language, year, filmtime, stars, hits, gold, up, down, created_at, day, prty, weekday, tag, mcid } = JSON.parse(filter);
       const condition: ICondition<IWhere> = {
         attributes,
         order,
@@ -140,8 +140,8 @@ export default (app: Context & Application) => {
           { name: { [Op.like]: `%%${wd}%%` } },
           { letters: { [Op.like]: `%%${wd}%%` } },
           { aliases: { [Op.like]: `%%${wd}%%` } },
-          { actor: { [Op.like]: `%%${wd}%%` } },
-          { keywords: { [Op.like]: `%%${wd}%%` } },
+          { star: { [Op.like]: `%%${wd}%%` } },
+          { tag: { [Op.like]: `%%${wd}%%` } },
           { director: { [Op.like]: `%%${wd}%%` } },
           { tag: { [Op.like]: `%%${wd}%%` } },
           { title: { [Op.like]: `%%${wd}%%` } },
@@ -288,18 +288,18 @@ export default (app: Context & Application) => {
       }
 
       if (tag) {
-        const param: any = { attributes: ['id'], where: { name: tag, sid: 1 } };
+        const param: any = { attributes: ['aid'], where: { name: tag, sid: 1 } };
         const res = await model.Tag.findAll(param);
-        let ids = res.map((item: any) => item.id);
+        let ids = res.map((item: any) => item.aid);
         if (not) {
           ids = ids.filter(item => item !== not);
         }
         condition.where.id = ids;
       } else if (mcid) {
         const arr = mcid.split(',');
-        const param: any = { attributes: ['id'], where: { mid: arr } };
+        const param: any = { attributes: ['aid'], where: { mid: arr } };
         const res = await model.Mcid.findAll(param);
-        let ids = res.map((item: any) => item.id);
+        let ids = res.map((item: any) => item.aid);
         if (not) {
           ids = ids.filter(item => item !== not);
         }

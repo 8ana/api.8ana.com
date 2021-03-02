@@ -14,6 +14,7 @@ import ExportMcid from '../../../app/model/mcid';
 import ExportNews from '../../../app/model/news';
 import ExportOmcat from '../../../app/model/omcat';
 import ExportOmcid from '../../../app/model/omcid';
+import ExportOtag from '../../../app/model/otag';
 import ExportRepty from '../../../app/model/repty';
 import ExportSetting from '../../../app/model/setting';
 import ExportSubject from '../../../app/model/subject';
@@ -35,6 +36,7 @@ declare module 'egg' {
     News: ReturnType<typeof ExportNews>;
     Omcat: ReturnType<typeof ExportOmcat>;
     Omcid: ReturnType<typeof ExportOmcid>;
+    Otag: ReturnType<typeof ExportOtag>;
     Repty: ReturnType<typeof ExportRepty>;
     Setting: ReturnType<typeof ExportSetting>;
     Subject: ReturnType<typeof ExportSubject>;

@@ -32,4 +32,12 @@ export default class Re extends Service {
   public async addsGold(params) {
     return await this.app.model.Favorite.adds(params);
   }
+
+  public async taglist() {
+    return await this.app.model.Otag.query();
+  }
+
+  public async addsTag(params) {
+    return await this.app.model.Tag.adds(params);
+  }
 }

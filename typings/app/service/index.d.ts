@@ -15,6 +15,7 @@ import ExportNews from '../../../app/service/news';
 import ExportRe from '../../../app/service/re';
 import ExportRedis from '../../../app/service/redis';
 import ExportSubject from '../../../app/service/subject';
+import ExportTag from '../../../app/service/tag';
 import ExportUser from '../../../app/service/user';
 
 declare module 'egg' {
@@ -28,6 +29,7 @@ declare module 'egg' {
     re: AutoInstanceType<typeof ExportRe>;
     redis: AutoInstanceType<typeof ExportRedis>;
     subject: AutoInstanceType<typeof ExportSubject>;
+    tag: AutoInstanceType<typeof ExportTag>;
     user: AutoInstanceType<typeof ExportUser>;
   }
 }

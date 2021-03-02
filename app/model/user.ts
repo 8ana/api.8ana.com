@@ -1,10 +1,10 @@
-import { Context } from 'egg';
+import { Context, Application } from 'egg';
 import { BaseModel, BaseModelStatic } from '../core/model';
 import user from '../schema/user';
 
 export interface User extends BaseModel {}
 
-export default (app: Context) => {
+export default (app: Context & Application) => {
   // 获取数据类型
   const { Sequelize, model } = app;
   const { Op } = Sequelize;

@@ -43,13 +43,17 @@ export default (app: Application) => {
   // // 剧情
   // router.get('/api/story/list', controller.api.story.list);
   // router.get('/api/story/:id', controller.api.story.get);
+  // tag 标签
+  router.get('/api/tag/list', controller.api.tag.list);
+  router.put('/api/tag/edit', auth(0), controller.api.tag.edit);
+  router.delete('/api/tag/delete', auth(0), controller.api.tag.delete);
   // 验证码
   router.get('/api/captcha/get', controller.api.captcha.get);
   router.get('/api/captcha/exp', controller.api.captcha.exp);
   // 大分类
   router.get('/api/list/list', controller.api.list.list);
   router.post('/api/list/add', auth(0), controller.api.list.add);
-  router.post('/api/list/edit', auth(0), controller.api.list.edit);
+  router.put('/api/list/edit', auth(0), controller.api.list.edit);
   router.delete('/api/list/delete', auth(0), controller.api.list.delete);
   router.get('/api/list/:id', controller.api.list.get);
   // 小分类
@@ -66,6 +70,7 @@ export default (app: Application) => {
   router.get('/api/re/mcat', controller.api.re.mcat);
   router.get('/api/re/mcid', controller.api.re.mcid);
   router.get('/api/re/gold', controller.api.re.gold);
+  router.get('/api/re/tag', controller.api.re.tag);
 
   // socket.io
   io.of('/io').route('exchange', io.controller.nsp.exchange);

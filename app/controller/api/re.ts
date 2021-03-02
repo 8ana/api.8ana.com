@@ -293,8 +293,32 @@ export default class ReController extends Controller {
         } as never;
         r.push(newD);
       }
-      // console.log(r);
+      console.log(r);
       await service.re.addsGold(r);
+    }
+  }
+
+  public async tag() {
+    const { ctx, service } = this;
+    const result = await service.re.taglist();
+    const data = ctx.helper.copy(result);
+    const page = 50;
+    const len = data.length / page;
+    for (let i = 0; i < len; i++) {
+      const a = data.splice(0, page);
+      const r = [];
+      for (let j = 0; j < a.length; j++) {
+        const { tag_id: aid, tag_name: name } = a[j];
+        const newD = {
+          aid,
+          name,
+          cid: 2,
+          sid: 1,
+        } as never;
+        r.push(newD);
+      }
+      console.log(r);
+      await service.re.addsTag(r);
     }
   }
 }

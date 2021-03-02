@@ -13,6 +13,7 @@ import ExportApiMcat from '../../../app/controller/api/mcat';
 import ExportApiNews from '../../../app/controller/api/news';
 import ExportApiRe from '../../../app/controller/api/re';
 import ExportApiSubject from '../../../app/controller/api/subject';
+import ExportApiTag from '../../../app/controller/api/tag';
 import ExportApiUser from '../../../app/controller/api/user';
 
 declare module 'egg' {
@@ -29,6 +30,7 @@ declare module 'egg' {
       news: ExportApiNews;
       re: ExportApiRe;
       subject: ExportApiSubject;
+      tag: ExportApiTag;
       user: ExportApiUser;
     }
   }
