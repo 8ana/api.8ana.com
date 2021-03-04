@@ -40,4 +40,12 @@ export default class Re extends Service {
   public async addsTag(params) {
     return await this.app.model.Tag.adds(params);
   }
+
+  public async playList() {
+    return await this.app.model.Oplay.query();
+  }
+
+  public async addsPlay(params) {
+    return await this.app.model.Subject.addPlay(params);
+  }
 }

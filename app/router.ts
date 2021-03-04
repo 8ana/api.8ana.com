@@ -71,6 +71,7 @@ export default (app: Application) => {
   router.get('/api/re/mcid', controller.api.re.mcid);
   router.get('/api/re/gold', controller.api.re.gold);
   router.get('/api/re/tag', controller.api.re.tag);
+  router.get('/api/re/play', controller.api.re.play);
 
   // socket.io
   io.of('/io').route('exchange', io.controller.nsp.exchange);

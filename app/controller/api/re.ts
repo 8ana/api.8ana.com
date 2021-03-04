@@ -321,4 +321,16 @@ export default class ReController extends Controller {
       await service.re.addsTag(r);
     }
   }
+
+  async play() {
+    const { ctx, service } = this;
+    const result = await service.re.playList();
+    const data = ctx.helper.copy(result);
+    const r = data.reduce((tatal, { play_title: title, play_name: name, play_oid: rank }, index) => {
+      tatal[index] = { name, title, rank, display: 1 };
+      return tatal;
+    }, []);
+    console.log(r);
+    await service.re.addsPlay(r);
+  }
 }

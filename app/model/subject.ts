@@ -109,13 +109,17 @@ export default (app: Context & Application) => {
       const rows = await Play.findAll({
         attributes: ['title', 'name', 'display', 'rank'],
         where: {
-          status: 1,
+          status: 0,
           display: 1,
         },
         order: [[orderBy, order]],
       });
 
       return rows;
+    }
+
+    static async addPlay(params) {
+      return await Play.bulkCreate(params);
     }
 
     /**

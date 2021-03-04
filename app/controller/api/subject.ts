@@ -47,7 +47,7 @@ export default class SubjectController extends Controller {
           const key = ctx.helper.md5(String(new Date().getTime()) + id + 'plain');
           playArr.forEach((item, index) => {
             const url = this.playlist_one(urlArr[index], key, item);
-            const info = playlist.filter((sitem: any) => sitem.name === item)[0] as any;
+            const info: any = playlist.filter((sitem: any) => sitem.name === item)[0];
             const price = url[0].pic || 0;
             let i = 0;
             const obj = {
