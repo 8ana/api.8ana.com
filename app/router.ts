@@ -10,7 +10,7 @@ export default (app: Application) => {
   // 用户
   router.post('/api/user/login', controller.api.user.login);
   router.post('/api/user/add', controller.api.user.add);
-  router.put('/api/user/edit', auth(0), controller.api.user.edit);
+  router.put('/api/user/edit', auth(0), controller.api.user.add);
   router.get('/api/user/list', controller.api.user.list);
   router.get('/api/user/info', auth(0), controller.api.user.userInfo);
   router.post('/api/user/logout', controller.api.user.logout);

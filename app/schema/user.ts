@@ -27,10 +27,14 @@ export default app => {
     is_station: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '是否开通站内订阅提醒' },
     register_ip: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '注册IP' },
     last_login_ip: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '最后登录 ip 地址' },
+    update_ip: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '更新信息 ip 地址' },
     status: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '用户状态：0正常 1禁用 2审核中 3审核拒绝 4审核忽略' },
     login_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '最后登录时间' },
     avatar_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '头像修改时间' },
     joined_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '付费加入时间' },
     expired_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '付费到期时间' },
+    created_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '创建时间' },
+    updated_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '更新时间' },
+    deleted_at: { type: DATE, comment: '删除时间' },
   };
 };

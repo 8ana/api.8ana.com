@@ -26,6 +26,7 @@ module.exports = {
       is_station: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '是否开通站内订阅提醒' },
       register_ip: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '注册IP' },
       last_login_ip: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '最后登录 ip 地址' },
+      update_ip: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '更新信息 ip 地址' },
       status: { type: TINYINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '用户状态：0正常 1禁用 2审核中 3审核拒绝 4审核忽略' },
       login_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '最后登录时间' },
       avatar_at: { type: DATE, allowNull: false, defaultValue: NOW, comment: '头像修改时间' },

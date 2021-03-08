@@ -99,8 +99,8 @@ export default class UserController extends Controller {
     const { ctx, service, UserAdd, app } = this;
     const params = ctx.request.body;
     // 校验参数
-    ctx.validate(UserAdd);
-    const { username, email, captcha, isAdmin } = params;
+    const { username, email, captcha, isAdmin, id, password } = params;
+    if (!id) ctx.validate(UserAdd);
     if (captcha) {
       const getCaptcha = ctx.cookies.get('captcha', { encrypt: true });
       if (!(captcha === getCaptcha)) {
@@ -109,53 +109,47 @@ export default class UserController extends Controller {
       }
     }
     if (username) {
+      if (id) {
+        delete params.username;
+        ctx.helper.fail(ctx, { message: '用户名不能修改' });
+        return;
+      }
       const user: any = await service.user.findUser({ username });
       if (user && user.username === username) {
         ctx.helper.fail(ctx, { message: '用户名重复' });
         return;
       }
     }
+    const rand = ctx.helper.randomString(6);
+    if (id) {
+      if (password) {
+        params.salt = rand;
+        params.password = ctx.helper.md5(params.password + rand);
+      }
+    } else {
+      params.salt = rand;
+      params.password = ctx.helper.md5(params.password + rand);
+    }
     if (email) {
-      const user: any = await service.user.findUser({ email });
+      const user: any = await service.user.findUser(Object.assign({}, id ? { not_id: id } : {}, { email }));
       if (user && user.email === email) {
         ctx.helper.fail(ctx, { message: '邮箱已被使用' });
         return;
       }
     }
+
     const ip = ctx.request.ip;
-    const rand = ctx.helper.randomString(6);
-    params.password = ctx.helper.md5(params.password + rand);
+    if (!id) {
+      params.register_ip = app.utils.Tool.ip2long(ip);
+      params.last_login_ip = app.utils.Tool.ip2long(ip);
+    } else {
+      params.update_ip = app.utils.Tool.ip2long(ip);
+    }
     const user = await service.user.exist();
     if (isAdmin && !user) {
       params.admin = 100;
     }
-    const result = await service.user.add({ ...params, salt: rand, reg_ip: app.utils.Tool.ip2long(ip), last_login_ip: app.utils.Tool.ip2long(ip) });
-    ctx.helper.success(ctx, { data: result });
-  }
-
-  async edit() {
-    const { ctx, service } = this;
-    const params = ctx.request.body;
-    const { password, email, id, username } = params;
-    if (username) {
-      delete params.username;
-      ctx.helper.fail(ctx, { message: '用户名不能修改' });
-      return;
-    }
-    if (password) {
-      const rand = ctx.helper.randomString(6);
-      params.salt = rand;
-      params.password = ctx.helper.md5(ctx.helper.md5(params.password) + rand);
-    }
-    if (email) {
-      const user: any = await service.user.findUser({ email, not_id: id });
-      if (user.email === email) {
-        ctx.helper.fail(ctx, { message: '邮箱已被使用' });
-        return;
-      }
-    }
-
-    const result = await service.user.edit(params);
+    const result = await service.user[id ? 'edit' : 'add']({ ...params });
     ctx.helper.success(ctx, { data: result });
   }
 
