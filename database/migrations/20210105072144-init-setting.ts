@@ -1,3 +1,4 @@
+// 网站设置表
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { STRING, TEXT } = Sequelize;

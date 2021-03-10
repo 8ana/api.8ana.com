@@ -1,3 +1,4 @@
+// 用户关注表
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER, BIGINT, DATE, NOW } = Sequelize;

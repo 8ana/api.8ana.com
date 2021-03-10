@@ -1,3 +1,4 @@
+// 内容关联表
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER, DATE, NOW, TINYINT } = Sequelize;

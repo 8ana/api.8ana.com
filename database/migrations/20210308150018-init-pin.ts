@@ -1,3 +1,4 @@
+// 发布动态表
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER, DATE, BIGINT, NOW, TINYINT, STRING } = Sequelize;
@@ -6,9 +7,13 @@ module.exports = {
       cid: { type: TINYINT.UNSIGNED, allowNull: false, comment: '分类id' },
       sid: { type: TINYINT.UNSIGNED, allowNull: false, comment: '模型ID' },
       uid: { type: INTEGER.UNSIGNED, allowNull: false, comment: '用户ID' },
-      aid: { type: INTEGER.UNSIGNED, allowNull: false, comment: '关联内容ID' },
-      msg: { type: STRING, allowNull: false, comment: '转发评论' },
+      aid: { type: INTEGER.UNSIGNED, comment: '关联内容ID' },
+      tid: { type: INTEGER.UNSIGNED, comment: '关联话题ID' },
+      content: { type: STRING, allowNull: false, comment: '动态内容' },
       ip: { type: INTEGER.UNSIGNED, allowNull: false, defaultValue: 0, comment: 'IP' },
+      comment_count: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '评论数' },
+      like_count: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '点赞数' },
+      forward_count: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '转发数' },
       hits: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '总' },
       hits_day: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '日' },
       hits_week: { type: BIGINT.UNSIGNED, allowNull: false, defaultValue: 0, comment: '周' },

@@ -1,3 +1,4 @@
+// 剧集表
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER, DATE, STRING, CHAR, TINYINT, BIGINT, NOW, DECIMAL, TEXT } = Sequelize;
