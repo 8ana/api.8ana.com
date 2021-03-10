@@ -13,7 +13,7 @@ export default class FeedController extends Controller {
       ctx.helper.deleleParams(format);
       ctx.helper.success(ctx, { data: format });
     } else {
-      ctx.helper.fail(ctx, { message: '没有找到内容' });
+      ctx.helper.fail(ctx, { message: '没有找到内容!' });
     }
   }
 
