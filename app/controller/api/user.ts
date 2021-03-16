@@ -1,6 +1,6 @@
 import { Controller } from 'egg';
 
-export default class UserController extends Controller {
+export default class User extends Controller {
   UserLoginTransfer: { username: { type: string; required: boolean }; password: { type: string; required: boolean } };
   UserAdd: { username: { type: string; required: boolean }; password: { type: string }; email: { type: string } };
   constructor(ctx) {

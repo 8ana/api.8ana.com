@@ -1,6 +1,6 @@
 import { Controller } from 'egg';
 
-export default class SubjectController extends Controller {
+export default class Subject extends Controller {
   async get() {
     // 获取 url 中的 id 参数
     const { ctx, service, app } = this;

@@ -93,7 +93,7 @@ const care = {
   186: 86,
 };
 
-export default class ReController extends Controller {
+export default class Re extends Controller {
   async list() {
     const findMcid = (mcid = '') => {
       const ids = mcid.split(',');

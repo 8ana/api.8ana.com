@@ -1,7 +1,7 @@
 import { Controller } from 'egg';
 import { create } from 'svg-captcha';
 
-export default class CaptchaController extends Controller {
+export default class Captcha extends Controller {
   async get() {
     const { ctx } = this;
     const captcha = create({
