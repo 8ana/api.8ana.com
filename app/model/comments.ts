@@ -1,29 +1,40 @@
-import { Context } from 'egg';
+import { Context, Application } from 'egg';
 import { BaseModel, BaseModelStatic } from '../core/model';
 import comments from '../schema/comments';
-import repty from '../schema/repty';
+import repty from '../schema/reply';
 
 export interface Comments extends BaseModel {}
 export interface Repty extends BaseModel {}
 
-export default (app: Context) => {
+export default (app: Context & Application) => {
   // 获取数据类型
   const { model } = app;
 
   const commentsSchema = comments(app);
   const reptySchema = repty(app);
   const Comments = model.define('comments', commentsSchema) as BaseModelStatic<Comments>;
-  const Repty = model.define('repty', reptySchema) as BaseModelStatic<Repty>;
+  const Repty = model.define('reply', reptySchema) as BaseModelStatic<Repty>;
 
   return class extends Comments<Comments> {
-    static associate() {
-      Comments.hasOne(model.User, { foreignKey: 'id', sourceKey: 'uid', as: 'user' });
-      Comments.hasMany(Repty, { foreignKey: 'aid', as: 'repty' });
-    }
     static async query({ attributes, pageSize = 10, pageNo = 1, order = ['created_at', 'DESC'] }) {
       const condition: any = {
         attributes,
         order: [order],
+        include: [
+          { model: model.User, attributes: ['id', 'username', 'nickname', 'avatar'], as: 'user' },
+          {
+            model: Repty,
+            attributes: ['id', 'content', 'device', 'is_sticky'],
+            as: 'repty',
+            include: [
+              {
+                model: model.User,
+                as: 'user',
+                attributes: ['id', 'username', 'nickname', 'avatar'],
+              },
+            ],
+          },
+        ],
         offset: pageSize * (pageNo - 1),
         limit: app.utils.Tool.toInt(pageSize),
         where: { status: 0 },
@@ -49,8 +60,11 @@ export default (app: Context) => {
       return result;
     }
     static async add(params) {
-      const result = await Comments.create(params);
-      return result;
+      return await Comments.create(params);
+    }
+
+    static async addReply(params) {
+      return await Repty.create(params);
     }
 
     static async edit(params) {
@@ -63,6 +77,12 @@ export default (app: Context) => {
     static async delete(params) {
       const result = await Comments.destroy({ where: params });
       return result;
+    }
+
+    static associate() {
+      Comments.hasOne(model.User, { foreignKey: 'id', sourceKey: 'uid', as: 'user' });
+      Comments.hasMany(Repty, { foreignKey: 'aid', as: 'repty' });
+      Repty.hasOne(model.User, { foreignKey: 'id', sourceKey: 'uid', as: 'user' });
     }
   };
 };

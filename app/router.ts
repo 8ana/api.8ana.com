@@ -34,6 +34,13 @@ export default (app: Application) => {
   router.post('/api/feed/edit', auth(0), controller.api.feed.edit);
   router.delete('/api/feed/delete', auth(0), controller.api.feed.delete);
   router.get('/api/feed/:id', controller.api.feed.get);
+  // 评论
+  router.get('/api/comment/list', controller.api.comments.list);
+  router.post('/api/comment/add', auth(0), controller.api.comments.add);
+  router.post('/api/comment/add_reply', auth(0), controller.api.comments.addReply);
+  router.post('/api/comment/edit', auth(0), controller.api.comments.edit);
+  router.delete('/api/comment/delete', auth(0), controller.api.comments.delete);
+  router.get('/api/comment/:id', controller.api.comments.get);
   // 订阅
   // router.get('/api/remind/list', controller.api.remind.list);
   // router.get('/api/remind/:id', controller.api.remind.get);
@@ -62,6 +69,7 @@ export default (app: Application) => {
   router.post('/api/mcat/edit', auth(0), controller.api.mcat.edit);
   router.delete('/api/mcat/delete', auth(0), controller.api.mcat.delete);
   router.get('/api/mcat/:id', controller.api.mcat.get);
+
   // 服务端渲染
   router.get('/news', controller.news.list);
 
